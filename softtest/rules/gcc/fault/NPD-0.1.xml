@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NPD-State-Machine Version="0.1" Language="C" Type="NPD" isPathSensitive="true" isVariableRelated="true" Action ="createNPDStateMachines" Class ="softtest.rules.gcc.fault.NPDStateMachine" Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="fsm.xsd">
+	<State Name="Start" isStartState="true">
+		<Transition ToState="NOTNULL">
+			<Domain Type="POINT" Value="NOTNULL"/>
+			<Scope Type="in"/>
+		</Transition>
+		<Transition ToState="NULL_OR_NOTNULL">
+			<Domain Type="POINT" Value="NULL"/>
+			<Scope Type="in"/>
+		</Transition>	
+		<Transition ToState="NULL_OR_NOTNULL">
+			<Domain Type="POINT" Value="NULL_OR_NOTNULL"/>
+			<Scope Type="in"/>
+		</Transition>
+		<Transition ToState="NULL_OR_NOTNULL">
+			<AlwaysTrue Action="checkFollowed" Args ="softtest.cfg.c.VexNode,softtest.fsm.c.FSMMachineInstance"/>
+			<Scope Type="in"/>
+		</Transition>
+	</State>
+	<State Name="NOTNULL">
+		<Transition ToState="NULL_OR_NOTNULL">
+			<Domain Type="POINT" Value="NULL"/>
+		</Transition>
+		<Transition ToState="NULL_OR_NOTNULL">
+			<Domain Type="POINT" Value="NULL_OR_NOTNULL"/>
+		</Transition>
+		<Transition ToState="END">
+			<Scope Type="out"/>
+		</Transition>
+	</State>
+	<State Name="NULL_OR_NOTNULL">
+		<Transition ToState="NOTNULL">
+			<Domain Type="POINT" Value="NOTNULL"/>
+		</Transition>
+		<Transition ToState="END">
+			<Scope Type="out"/>
+		</Transition>
+		<Transition ToState="ERROR">
+			<Xpath Value=".//AssignmentExpression/UnaryExpression/PostfixExpression/PrimaryExpression[(..[@Operators='.']) or (..[@Operators='->']) or (..[@Operators='['])]|
+			.//AssignmentExpression//UnaryExpression/PostfixExpression/PrimaryExpression[(../../../UnaryOperator[@Operators='*'])]|
+			.//RelationalExpression/UnaryExpression/PostfixExpression/PrimaryExpression[(..[@Operators='.']) or (..[@Operators='->']) or (..[@Operators='['])]|
+			.//RelationalExpression/UnaryExpression/UnaryExpression/PostfixExpression/PrimaryExpression[(../../../UnaryOperator[@Operators='*'])]" 
+			Action="checkSameVariable" Args="java.util.List,softtest.fsm.c.FSMMachineInstance" />
+			<Domain Value="NOTNULL" Type="POINT" Equal="false" />
+		</Transition>
+	</State>
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">
+		</Transition>
+	</State>
+	<State Name="END" isFinalState="true">
+	</State>
+</NPD-State-Machine>

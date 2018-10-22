@@ -1,0 +1,39 @@
+C51 COMPILER V9.00   MAIN                                                                  04/13/2010 18:40:56 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN E:\javaprogram\DTSEmbed\testcase\interpro_graph\userheadfile\Main.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\c51.exe E:\javaprogram\DTSEmbed\testcase\interpro_graph\userheadfile\Main.c INCDIR(
+                    -C:\Keil\C51\INC\ADI;C:\Keil\C51\INC\Atmel;C:\Keil\C51\INC\Infineon;C:\Keil\C51\INC\Philips;C:\Keil\C51\INC\Evatronix;C:\
+                    -Keil\C51\INC\TI;C:\Keil\C51\INC\Dallas;E:\javaprogram\DTSEmbed\testcase\interpro_graph\userheadfile) PP(E:\javaprogram\D
+                    -TSEmbed\temp\Main.i)
+
+line level    source
+
+   1          #include "My.h"
+   2          //extern void print(char *str);
+   3          int main()
+   4          {
+   5   1              char *str=NULL;
+   6   1              
+   7   1              print(str);
+   8   1              
+   9   1              print("");
+  10   1              print(" ");
+  11   1              print("hello world!");
+  12   1              return 0;
+  13   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     91    ----
+   CONSTANT SIZE    =     74    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OOB_Check-State-Machine Version="0.1" Language="C" Type="OOB_Check" 
+			isPathSensitive="true" isVariableRelated="true" 
+			Action ="createOOBStateMachines" Class ="softtest.rules.gcc.fault.OOB_CheckStateMachine" 
+			Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine">
+	<State Name="Start" isStartState="true">
+		<Transition ToState="ERROR">
+		</Transition>
+	</State>
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">
+		</Transition>
+	</State>
+	<State Name="END" isFinalState="true">
+	</State>
+</OOB_Check-State-Machine>

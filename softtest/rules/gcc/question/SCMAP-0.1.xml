@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SCMAP-State-Machine Version="0.1" Language="C Plus Plus" 
+        Type="SCMAP" 
+		isPathSensitive="false" 
+		isVariableRelated="false" 
+		Action ="createSCMAPStateMachines" 
+		Class ="softtest.rules.gcc.question.SCMAPStateMachine" 
+		Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine">
+	
+	<State Name="Start" isStartState="true">
+		<Transition ToState="ERROR">
+		</Transition>
+	</State>
+	
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">			
+		</Transition>
+	</State>
+	
+	<State Name="END" isFinalState="true">
+	</State>
+</SCMAP-State-Machine>

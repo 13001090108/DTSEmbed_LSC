@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MM_Summary>
+   
+    <!-- eg:
+		
+		1.根据<Feature type = "FEATURE_MM" .../> 子标签 LibMethodDespMM为Method标签定义的方法 生成MethodMMFeature0特征(sideEffect) 
+		2.Feature子标签中的subtype属性的值为0表示 该函数是free类的函数 值为1时表示该函数是malloc类的函数
+		3.Feature子标签中的属性paramIndex的值表示 我们关心的是第几个参数 如对于malloc函数我们关心第一个参数(分配的长度) 对于free函数
+		  我们也是关心一个参数(待释放内存的地址)
+		4.Return子标签用来设定函数的默认返回值和返回类型 Allocate子标签用来设定返回的指针区间中AllocateType为heap
+		  对于free类的函数 不需要这两个子标签
+		  (其实在指针的区间运算中 也可以利用Feature_MM特征 而不必用代码硬判断是否是malloc)
+		
+		<Method name="malloc" libPos="stdlib.h" signature="typedef unsigned int size_t;void * malloc( size_t size );">
+			<Feature type = "FEATURE_MM"  subtype = "1"  paramIndex = "1"/>
+			<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+			<Allocate type = "Point" value = "true"/>
+		</Method>
+	-->
+	
+	
+</MM_Summary>

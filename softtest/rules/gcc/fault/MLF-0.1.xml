@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MLF-State-Machine Version="0.1" Language="GCC" Type="MLF" isPathSensitive="true" isVariableRelated="true" Action ="createMLFStateMachines" Class ="softtest.rules.gcc.fault.MLFStateMachine" Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine">
+	<State Name="Start" isStartState="true">
+		<Transition ToState="CAlloc">
+		    <Xpath Value=".//UnaryExpression/PostfixExpression/PrimaryExpression[@Method='true']" Action="checkCAllocMethod" Args="java.util.List,softtest.fsm.c.FSMMachineInstance" >
+		    </Xpath>
+		</Transition>
+	</State>
+	
+	
+	<State Name="CAlloc">
+		<Transition ToState="FREE">
+			<Xpath Value=".//UnaryExpression/PostfixExpression/PrimaryExpression[@Method='true']" Action="checkCFreeMethod" Args ="java.util.List,softtest.fsm.c.FSMMachineInstance">
+			</Xpath>
+		</Transition>
+		
+		<Transition ToState="ERROR">
+		    <Xpath Value=".//UnaryExpression/PostfixExpression/PrimaryExpression[@Method='true']" Action="checkAllocOrNewError" Args ="java.util.List,softtest.fsm.c.FSMMachineInstance">
+			</Xpath>
+		</Transition>
+		
+		<Transition ToState="ERROR">
+			<AlwaysTrue Action="checkMemoryLeak" Args="softtest.cfg.c.VexNode,softtest.fsm.c.FSMMachineInstance"></AlwaysTrue>
+		</Transition>
+		<Transition ToState="ERROR">
+			<Xpath Value=".//UnaryExpression/PostfixExpression/PrimaryExpression[@Method='true']" Action="checkCFreeMethodError" Args ="java.util.List,softtest.fsm.c.FSMMachineInstance">
+			</Xpath>
+		</Transition>
+		<Transition ToState="END">
+			<AlwaysTrue Action="checkDomain" Args ="softtest.cfg.c.VexNode,softtest.fsm.c.FSMMachineInstance"/>
+		</Transition>
+	</State>
+	
+	
+	<State Name="FREE">
+		<Transition ToState="END">
+			<Scope Type="out"/>
+		</Transition>
+		<Transition ToState="ERROR">
+			<Xpath Value=".//UnaryExpression/PostfixExpression/PrimaryExpression[@Method='true']" Action="checkFreeOrDelete" Args ="java.util.List,softtest.fsm.c.FSMMachineInstance">
+			</Xpath>
+		</Transition>	
+	</State>
+	
+	
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">
+		</Transition>
+	</State>
+	
+	
+	<State Name="END" isFinalState="true">
+	</State>
+</MLF-State-Machine>

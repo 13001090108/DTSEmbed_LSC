@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MLF_FREE-State-Machine Version="0.1" 
+     Language="GCC" Type="MLF_FREE" isPathSensitive="true" isVariableRelated="true" 
+     Action ="createMLF_FREEStateMachines" 
+     Class ="softtest.rules.gcc.fault.MLF_FREEStateMachine" 
+     Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine">
+     
+     <State Name="Start" isStartState="true" Action="setDomain" Args="softtest.cfg.c.VexNode,softtest.fsm.c.FSMMachineInstance">
+         <Transition ToState="FREE">
+			<Xpath Value=".//UnaryExpression/PostfixExpression/PrimaryExpression[@Method='true']" 
+			Action="checkFree" Args ="java.util.List,softtest.fsm.c.FSMMachineInstance">
+			</Xpath>
+		</Transition>
+		
+		<Transition ToState="FREE">
+		    <Xpath Value=".//Expression/AssignmentExpression[count(*)=3 and ./AssignmentOperator" 
+			Action="checkGlobalVar" Args ="java.util.List,softtest.fsm.c.FSMMachineInstance">
+			</Xpath>
+		</Transition>
+		
+		<Transition ToState="ERROR">
+			<AlwaysTrue Action="checkError" Args="softtest.cfg.c.VexNode,softtest.fsm.c.FSMMachineInstance"></AlwaysTrue>
+		</Transition>
+	 </State>
+	 
+	 <State Name="FREE">
+	     <Transition ToState="END">
+	         <Scope Type="out"/>
+		</Transition>
+	 </State>
+	 
+	 <State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">
+		</Transition>
+	</State>
+	 
+	 <State Name="END" isFinalState="true">
+	 </State>
+</MLF_FREE-State-Machine>

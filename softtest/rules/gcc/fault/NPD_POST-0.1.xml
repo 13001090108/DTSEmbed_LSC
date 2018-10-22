@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<State-Machine Version="0.1" Language="C" Type="NPD_POST" isPathSensitive="true" isVariableRelated="true" Action ="createNPD_PostStateMachines" Class ="softtest.rules.gcc.fault.NPD_PostStateMachine" Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="fsm.xsd">
+	<State Name="Start" isStartState="true">
+		<Transition ToState="NULL_OR_NOTNULL">
+			<AlwaysTrue Action="checkSameVex" Args="softtest.cfg.c.VexNode,softtest.fsm.c.FSMMachineInstance" />
+		</Transition>
+	</State>
+	<State Name="NULL_OR_NOTNULL">
+		<Transition ToState="ERROR">
+			<Xpath Value=".//AssignmentExpression//UnaryExpression/PostfixExpression[starts-with(@Operators,'[') or starts-with(@Operators,'->')]/PrimaryExpression|.//AssignmentExpression//UnaryExpression/PostfixExpression/PrimaryExpression[../../../UnaryOperator[@Operators='*']]" 
+				Action="checkNPDPost" Args="java.util.List,softtest.fsm.c.FSMMachineInstance" >
+			</Xpath>
+		</Transition>
+		<Transition ToState="END">
+			<Xpath Value=".//AssignmentExpression[AssignmentOperator[@Operators='=']]//UnaryExpression/PostfixExpression/PrimaryExpression" 
+				Action="checkAssign" Args="java.util.List,softtest.fsm.c.FSMMachineInstance" >
+			</Xpath>
+		</Transition>
+		<Transition ToState="END">
+			<Scope Type="out"/>
+		</Transition>
+	</State>
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">
+		</Transition>
+	</State>
+	<State Name="END" isFinalState="true">
+	</State>
+</State-Machine>

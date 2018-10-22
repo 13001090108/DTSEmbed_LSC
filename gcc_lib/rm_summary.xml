@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RL_Summary>
+	<Method name="fopen" libPos="stdio.h"
+		signature="typedef struct _iobuf{	} FILE;
+			FILE * fopen ( const char * filename, const char * mode );">
+		<Feature type="FEATRUE_RM" name="fclose"
+			value="typedef struct _iobuf{} FILE;
+				int fclose ( FILE * stream );" />
+		<Return type="Point" value="NULL_OR_NOTNULL" />
+	</Method>
+	<Method name="mysql_real_connect" libPos="mysql/mysql.h"
+		signature="typedef struct st_mysql{	}MYSQL;
+			MYSQL *	mysql_real_connect(MYSQL *mysql, const char *host,
+					   const char *user,
+					   const char *passwd,
+					   const char *db,
+					   unsigned int port,
+					   const char *unix_socket,
+					   unsigned long clientflag);">
+		<Feature type="FEATRUE_RM" name="mysql_close"
+			value="typedef struct st_mysql{	} MYSQL;
+				void  mysql_close(MYSQL *mysql);" />
+		<Return type="Point" value="NULL_OR_NOTNULL" />
+	</Method>
+
+	<Method name="socket" libPos="sys/socket.h,unistd.h"
+		signature="int socket(int domain, int type, int protocol);">
+		<Feature type="FEATRUE_RM" name="close"
+			value="int close(int fd);" />
+	</Method>
+</RL_Summary>

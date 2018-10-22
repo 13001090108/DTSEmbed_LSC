@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OOB-State-Machine Version="0.1" Language="C" Type="OOB"
+	isPathSensitive="true" isVariableRelated="true"
+	Action="createOOBStateMachines"
+	Class="softtest.rules.keilc.fault.OOBStateMachine"
+	Args="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine">
+	<State Name="Start" isStartState="true">
+		<Transition ToState="ERROR">
+			<Xpath
+				Value=".//UnaryExpression/PostfixExpression[contains(@Operators,'[')]|
+				.//AssignmentExpression/UnaryExpression[/UnaryOperator[1][contains(@Operators,'*')]]/UnaryExpression/PostfixExpression/PrimaryExpression/Expression/AssignmentExpression/AdditiveExpression|
+				.//UnaryExpression[/UnaryOperator[1][contains(@Operators,'*')]]/UnaryExpression[contains(@Operators,'++')]/UnaryExpression/PostfixExpression/PrimaryExpression|
+				.//UnaryExpression[/UnaryOperator[1][contains(@Operators,'*')]]/UnaryExpression/PostfixExpression[contains(@Operators,'++')]/PrimaryExpression|
+				.//UnaryExpression[/UnaryOperator[1][contains(@Operators,'*')]]/UnaryExpression[contains(@Operators,'--')]/UnaryExpression/PostfixExpression/PrimaryExpression|
+				.//UnaryExpression[/UnaryOperator[1][contains(@Operators,'*')]]/UnaryExpression/PostfixExpression[contains(@Operators,'--')]/PrimaryExpression"
+				Action="checkSameVariableAndOOB"
+				Args="java.util.List,softtest.fsm.c.FSMMachineInstance">
+			</Xpath>
+		</Transition>
+	</State>
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">
+			<Nextvex></Nextvex>
+		</Transition>
+		<Transition ToState="END">
+			<Scope Type="out"></Scope>
+		</Transition>
+	</State>
+	<State Name="END" isFinalState="true"></State>
+</OOB-State-Machine>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GDLV-State-Machine Version="0.1" Language="C" 
+        Type="GDLV" 
+		isPathSensitive="false" 
+		isVariableRelated="true" 
+		Scope = "File"
+		Action ="createGDLVStateMachines" 
+		Class ="softtest.rules.gcc.rule.GDLVStateMachine" 
+		Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine">
+	
+	<State Name="Start" isStartState="true">
+		<Transition ToState="ERROR">
+			<AlwaysTrue/>		    
+		</Transition>				
+	</State>		
+		
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">			
+		</Transition>
+	</State>	
+		
+	<State Name="END" isFinalState="true">
+	</State>
+</GDLV-State-Machine>

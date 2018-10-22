@@ -1,0 +1,47 @@
+liuli:2010.7.9	
+	下面列出的是在DTS的分析过程中所屏蔽掉的关键字，
+	需要在开发过程中不断进行完善
+cmershen 2016.12.28 补充几个
+__inline__
+__inline
+_inline
+__extension__
+__volatile__
+__based(x) 
+_based(x) 
+__cdecl
+_cdecl 
+__fastcall
+_fastcall 
+__stdcall
+_stdcall 
+__declspec(x)
+_declspec(x) 
+__assume(x)
+_assume(x) 
+__multiple_inheritance
+_multiple_inheritance 
+__single_inheritance
+_single_inheritance
+__virtual_inheritance
+_virtual_inheritance
+__leave 
+_leave 
+__forceinline
+_forceinline
+__ptr64
+__DJ_wint_t 
+__attribute__(x)
+__asm__(x)
+NONAMELESSUNION
+NONAMELESSSTRUCT 
+__MINGW_ATTRIB_NORETURN
+__MINGW_ATTRIB_CONST
+__MINGW_ATTRIB_MALLOC
+__MINGW_ATTRIB_PURE 
+__CRT_INLINE
+__MINGW_IMPORT
+__MINGW_NOTHROW
+PACKED
+__uid32_t
+__uid32_t 

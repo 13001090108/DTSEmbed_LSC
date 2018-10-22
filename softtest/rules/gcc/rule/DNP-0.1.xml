@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DNP-State-Machine Version="0.1" Language="C" Type="DNP" isPathSensitive="false" 
+                   isVariableRelated="false" Action ="createDNPStateMachines" 
+                   Scope = "File"
+                   Class ="softtest.rules.gcc.rule.DNPStateMachine" 
+                   Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine" 
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                   xsi:noNamespaceSchemaLocation="fsm.xsd">
+	<State Name="Start" isStartState="true">
+		<Transition ToState="ERROR">
+			<Xpath Value=".//Declaration/DeclarationSpecifiers/TypeSpecifier[@Image='char']
+			|.//TypeSpecifier/StructOrUnionSpecifier/StructOrUnion[@Image='struct']" 
+			Action="checkDeclaration" 
+			Args ="java.util.List,softtest.fsm.c.FSMMachineInstance"/>
+		</Transition>
+	</State>
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">
+		</Transition>
+	</State>
+	<State Name="END" isFinalState="true">
+	</State>
+</DNP-State-Machine>

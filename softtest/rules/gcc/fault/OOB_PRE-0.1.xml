@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OOB_PRE-State-Machine Version="0.1" Language="c" Type="OOB_PRE"
+	isPathSensitive="true" isVariableRelated="true"
+	Action="createOOB_PREStateMachines"
+	Class="softtest.rules.gcc.fault.OOB_PREStateMachine"
+	Args="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine">
+	<State Name="Start" isStartState="true">
+		<Transition ToState="ERROR">
+			<Xpath
+				Value=".//PrimaryExpression[@Method='true']"
+				Action="checkFunctionCallOOB"
+				Args="java.util.List,softtest.fsm.c.FSMMachineInstance">
+			</Xpath>
+		</Transition>
+	</State>
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">
+			<Nextvex></Nextvex>
+		</Transition>
+		<Transition ToState="END">
+			<Scope Type="out"></Scope>
+		</Transition>
+	</State>
+	<State Name="END" isFinalState="true"></State>
+</OOB_PRE-State-Machine>

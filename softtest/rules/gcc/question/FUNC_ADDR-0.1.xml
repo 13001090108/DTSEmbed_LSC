@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FUNC_ADDR-State-Machine Version="0.1" Language="C" 
+        Type="FUNC_ADDR" 
+		isPathSensitive="false" 
+		isVariableRelated="false" 
+		Action ="createFUNC_ADDRStateMachines" 
+		Class ="softtest.rules.gcc.question.FUNC_ADDRStateMachine" 
+		Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine">
+	
+	<State Name="Start" isStartState="true">
+		<Transition ToState="ERROR">
+		<AlwaysTrue/>
+		</Transition>
+	</State>
+	
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">			
+		</Transition>
+	</State>
+	
+	<State Name="END" isFinalState="true">
+	</State>
+</FUNC_ADDR-State-Machine>

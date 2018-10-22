@@ -1,0 +1,35 @@
+C51 COMPILER V8.02   TEST3_1                                                               04/22/2010 19:45:05 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEST3_1
+OBJECT MODULE PLACED IN .\testcase\rules\fault\EDD\test3\test3.1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\c51.exe .\testcase\rules\fault\EDD\test3\test3.1.c PP(D:\Project\DTS\DTSEmbed\temp\
+                    -test3.11.i)
+
+line level    source
+
+*** WARNING C500 IN LINE 1 OF .\TESTCASE\RULES\FAULT\EDD\TEST3\TEST3.1.C: LICENSE ERROR (R225: REGISTRATION FILE 'TOOLS.
+             -INI' NOT FOUND)
+
+   1          int a;
+   2          int xdata b;
+   3          void f()
+   4          {
+   5   1      extern char i;
+   6   1      extern xdata char j;
+   7   1      
+   8   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =      1    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      2    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

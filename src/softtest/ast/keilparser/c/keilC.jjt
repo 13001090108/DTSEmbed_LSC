@@ -1,0 +1,990 @@
+/*
+
+  C grammar defintion for use with JavaCC
+  Contributed by Doug South (dsouth@squirrel.com.au) 21/3/97
+
+  This parser assumes that the C source file has been preprocessed : all
+  #includes have been included and all macros have been expanded. I accomplish
+  this with "gcc -P -E <source file> > <output file>".
+
+  There is a problem with compiler specific types, such as __signed, __const,
+  __inline__, etc. These types can be added as typedef types before the parser
+  is run on a file. See main() for an example. I have also found a strange little
+  compiler specific "type" if you can call it that. It is __attribute__, but it
+  does not seem to be used as a type. I found that just deleting the __attribute__
+  and the following "offensive" code works.
+
+  This grammar also prints out all the types defined while parsing the file. This
+  is done via a call to printTypes() when the parser is complete. If you do not want
+  this, just comment out the printTypes() method call in the production rule
+  TranslationUnit(), which BTW is the root node for parsing a C source file.
+
+  I have not in anyway extensively tested this grammar, in fact it is barely tested,
+  but I imagine it is better to have a starting point for a C grammar other than from
+  scratch. It has not been optimized in anyway, my main aim was to get a parser that
+  works. Lookahead may not be optimum at choice points and may even be insufficient at
+  times. I choose to err on the side of not optimum if I made a choice at all.
+
+  If you use this grammar, I would appreciate hearing from you. I will try to maintain
+  this grammar to the best of my ability, but at this point in time, this is only a side
+  hobby (unless someone wants to pay me for doing JavaCC work!). In that regards, I am
+  interested in hearing bugs and comments.
+
+  TODO:
+    Insert the appropriate code to enable C source trees from this grammar.
+
+=============================================
+3/2/06: Modified by Tom Copeland
+- STRING_LITERAL now handles embedded escaped newlines, thanks to J.Chris Findlay for the patch
+- Works with JavaCC 4.0
+- Preprocessor directives are now simply SKIP'd, so no need to run C files through GCC first
+
+  */
+options {
+  BUILD_PARSER=true;
+  JAVA_UNICODE_ESCAPE = true;
+  CACHE_TOKENS = true;
+  STATIC = false;
+  USER_CHAR_STREAM = true;
+  
+  MULTI = true;
+  VISITOR = true;
+  
+  TRACK_TOKENS = false;
+  
+  NODE_USES_PARSER = true;
+  OUTPUT_DIRECTORY = "keil";
+  
+  NODE_PACKAGE="softtest.ast.keilparser.c";
+}
+
+PARSER_BEGIN(CParser_Keil)
+package softtest.ast.keilparser.c;
+
+import softtest.ast.c.*;
+import java.io.*;
+
+  public class CParser_Keil extends CParser {
+	public ASTTranslationUnit createAST(java.io.StringReader input) {
+		try {
+			CCharStream ccs = new CCharStream(input);
+			CParser parser = new CParser_Keil(ccs);
+
+			ASTTranslationUnit astcu = parser.TranslationUnit();
+			System.out.println("parsed successfully :) ");
+			return astcu;
+		} catch (ParseException pe) {
+			pe.printStackTrace();
+			return null;
+		}
+	}
+
+	public ASTTranslationUnit parser(String inputfile){
+		CParser parser = null;
+		ASTTranslationUnit astroot = null;
+		try {
+			parser = new CParser_Keil(new CCharStream(new FileInputStream(inputfile)));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+                }
+
+		try {
+			astroot = parser.TranslationUnit();
+                } catch (ParseException e) {
+                        e.printStackTrace();
+                }
+		return astroot;
+	}
+
+	void error_skipto(int kind,Exception in_exception) throws  Exception{
+		throw in_exception;
+	}
+
+        void error_skipto1(int kind,Exception in_exception) {
+
+		//logger.error(in_exception.toString());
+		ParseException e = generateParseException();
+		StackTraceElement st[] = e.getStackTrace();
+		/*for (int i = 0; i < st.length; i++) {
+                	logger.error(st[i]);
+                }
+		*/
+        	errorMsg.add(e.toString());
+
+        	Token t = getNextToken();
+        	t = getNextToken();
+        	int flag = 0;
+        	int bracketNum = 0, cbracketNum = 0;
+        	if (t.image.equals("(")) {
+            		flag = 1;
+            		bracketNum = 1;
+        	} else if (t.image.equals("{")) {
+        		flag = 2;
+        		cbracketNum = 1;
+        	}
+        	if (flag > 0) {
+            		while(bracketNum >= 0 ||cbracketNum >=0 ) {
+            			t = getNextToken();
+                		if (t.image.equals("(")) {
+                			bracketNum++;
+               	 		} else if (t.image.equals(")")) {
+                			bracketNum--;
+                		} else if (t.image.equals("{")) {
+                			cbracketNum++;
+                		} else if (t.image.equals("}")) {
+                			cbracketNum--;
+               			}
+                		if (t.kind == CParser_KeilConstants.EOF || 
+                			(cbracketNum <=0 &&(t.kind==CParser_KeilConstants.SEMICOLON || jj_nt.kind == CParser_KeilConstants.RIGHTCURLYBRACKETS))) {
+                     			return;
+                		}        
+            		}
+       		 }
+
+        	do {
+               		t = getNextToken();
+        	} while (t.kind!=CParser_KeilConstants.EOF&&t.kind != kind);// The above loop consumes tokens all the way up to a token of
+
+        	// "kind".  We use a do-while loop rather than a while because the
+        	// current token is the one immediately before the erroneous token
+       	 	// (in our case the token immediately before what should have been
+        	// "if"/"while".
+	}
+
+
+	void DeclarationException(Exception ine)throws Exception{
+		throw ine;
+	}
+	
+   	void DeclarationException1	(Exception ine){
+       		//logger.error(ine.toString());
+        	ParseException e = generateParseException();  // generate the exception object.
+        	StackTraceElement st[] = e.getStackTrace();
+        	/*for (int i = 0; i < st.length; i++) {
+                        logger.error(st[i]);
+        	}*/
+   	}
+   	
+    boolean isPointer(){
+		Token t1=getToken(1);
+		Token t2=getToken(2);
+		for(int i=3;i<1024;i++){
+			if(t1.kind== CParser_KeilConstants.IDENTIFIER&&!isType(t1.image)){
+				int count=0;
+				if(t2.image.equals(")")){
+					count++;
+					Token t;
+					for(int j=i;j<1024;j++){
+						t=getToken(j);
+						if(t.image.equals(")")){
+							count++;
+						}else{
+							break;
+						}
+					}
+					
+					for(int j=i-2;j>0;j--){
+						t=getToken(j);
+						if(t.image.equals("*")){
+							return true;
+						}else if(t.image.equals("(")){
+							count--;
+							if(count==0){
+								return false;
+							}
+						}
+					}
+				}
+				return false;
+			}
+			t1=t2;
+			t2=getToken(i);
+		}
+		return false;
+	}	
+   
+}
+
+PARSER_END(CParser_Keil)
+
+SKIP : {
+ " "
+|  "\t"
+|  "\n"
+|  "\r"
+|  <"//" (~["\n","\r"])* ("\n" | "\r" | "\r\n")>
+|  <"/*" (~["*"])* "*" ("*" | ~["*","/"] (~["*"])* "*")* "/">
+|  <"asm" (" "|"\t") ("\t"|"\n"|"\r"|" "|"\r\n")* "{" (~["{","}"])* "}">
+|  <("__asm"|"__asm__") (" "|"\t") ("\t"|"\n"|"\r"|" "|"\r\n")* "{" (~["{","}"])* "}">
+|  <"asm" (" "|"\t") (~["\n","\r","}","{","("])* ("\n" | "\r" | "\r\n")?>
+|  <("__asm"|"__asm__") (" "|"\t") (~["\n","\r","}","{","("])* ("\n" | "\r" | "\r\n")?>
+|  <("__asm"|"asm"|"__asm__") (" "|"\t"|"\n"|"\r")* "("> {
+	int leftbracketnum=1;//左括号的个数
+	char c;
+	try{
+        	while(leftbracketnum>0&&(c=input_stream.readChar())>0){
+      	   		if (c==')') leftbracketnum--;
+            		if (c=='(') leftbracketnum++;
+		}
+            	while((c=input_stream.readChar())>0){
+            		if (c==';'){
+         	     		break;
+            		}
+            		{	
+           			System.out.println("should be a <;> after __asm( <something> )");
+            		}
+           	}
+        }catch(Exception e){e.printStackTrace();}
+   }
+|  <"__attribute__((packed))">
+|  <"__attribute__ ((__const__))">
+|  <"__attribute__ ((__noreturn__))">
+| <"#pragma" (" "|"\t")+ "ASM"> :ASM_BLOCK
+| <"#pragma" >:PRAGMA_BLOCK
+| "#" : PREPROCESSOR_OUTPUT
+}
+
+<ASM_BLOCK> SKIP:
+{
+	<"#pragma" (" "|"\t")+ "ENDASM"> :DEFAULT
+	|< ~[] >
+}
+<PRAGMA_BLOCK> SKIP:
+{
+ " "
+| "\t"
+| "\n":DEFAULT
+| "\r":DEFAULT
+}
+
+<PRAGMA_BLOCK> TOKEN:
+{
+ <PIDENTIFIER: "disable"|"NOARGES"|"AREGS">
+}
+
+<PRAGMA_BLOCK> SKIP:
+{
+< ~[] >
+}
+
+
+<PREPROCESSOR_OUTPUT> SKIP:
+{
+  "\n" 
+   {
+         if(image.length()>0){
+         	String tempimage = image.toString();
+			if (tempimage.startsWith("line") || tempimage.startsWith("Line")
+					|| tempimage.startsWith(" ")) {
+				String[] strs = tempimage.split(" ");
+				boolean b = false;
+				if (strs.length >= 2) {
+					int newline = 0;
+					String newfilename ="";
+					if(strs.length>2){
+ 						newfilename= strs[2];
+ 						int i=3;
+ 						while(i<strs.length&&newfilename.startsWith("\"")&&!newfilename.endsWith("\"")){
+ 							newfilename= newfilename+" "+strs[i];
+ 							i++;
+ 						}
+					}
+					try {
+						newline = Integer.parseInt(strs[1])-1;
+						newfilename=newfilename.replace("/", "\\");
+						newfilename=newfilename.replace("\\\\","\\");
+						newfilename.intern();
+						b = true;
+					} catch (Exception e) {
+					}
+					if (b && (input_stream instanceof CCharStream)) {
+						((CCharStream) input_stream)
+								.adjustBeginLineAndFileName(newline,
+										newfilename);
+					}
+				}
+			}
+         }
+   }: DEFAULT
+}
+
+<PREPROCESSOR_OUTPUT> MORE:
+{
+ "\\\n"
+ |
+ "\\\r\n"
+ |
+ < ~[] >
+}
+
+
+TOKEN : {
+// modify to support vc style integer 	
+ <INTEGER_LITERAL: <DECIMAL_LITERAL> (((["u","U"])(["l","L"])?)?|((["l","L"])(["u","U"])?)|(("i64"|"LL"|"ll")?))
+| <HEX_LITERAL> (["l","L"])? | <OCTAL_LITERAL> (["l","L"])?>
+|  <#DECIMAL_LITERAL: ["1"-"9"] (["0"-"9"])* | "0">
+|  <#HEX_LITERAL: "0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])+(((["u","U"])(["l","L"])?)?|((["l","L"])(["u","U"])?))>
+|  <#OCTAL_LITERAL: "0" (["0"-"7"])*>
+|  <FLOATING_POINT_LITERAL: (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)? (["f","F","d","D"])? | "." (["0"-"9"])+ (<EXPONENT>)? (["f","F","d","D"])? | (["0"-"9"])+ <EXPONENT> (["f","F","d","D"])? | (["0"-"9"])+ (<EXPONENT>)? ["f","F","d","D"]>
+|  <#EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+>
+|  <CHARACTER_LITERAL: "\'" (~["\'","\\","\n","\r"] | "\\" (["n","t","b","r","f","\\","\'","\""] | ["0"-"7"] (["0"-"7"])? | ["0"-"3"] ["0"-"7"] ["0"-"7"])) "\'">
+|  <STRING_LITERAL: "\"" ( ~["\"","\\","\n","\r"] | "\\" ( ["n","t","b","r","f","\\","\'","\""] | ["0"-"7"] (["0"-"7"])?  | ["0"-"3"] ["0"-"7"] ["0"-"7"] | ( ["\n","\r"] | "\r\n")))* "\"">
+}
+
+//Keil: keywords
+TOKEN : {
+	<CODE: "code"> |		//program memory
+	<DATA: "data"> |		//internal data memory
+	<IDATA: "idata"> |
+	<BDATA: "bdata"> |
+	<XDATA: "xdata"> |		//external data memory
+	<PDATA: "pdata"> |
+	<SMALL: "small"> |
+	<COMPACT: "compact"> |	//function declarations
+	<LARGE: "large"> |
+	<REENTRANT: "reentrant"> |
+	<INTERRUPT: "interrupt"|"__interrupt"> |
+	<USING: "using"> |
+	<BIT: "bit"> |
+	<SBIT: "sbit"|"__sbit"> |
+	<SFR: "sfr"> |
+	<SFR16: "sfr16"|"__sfr16"> |
+	<AT: "_at_"|"__at"> |
+	<ALIEN: "alien"> |
+	<PRIORITY: "_priority_"> |
+	<TASK: "_task_"> |
+	<CONTINUE: "continue"> |
+	<VOLATILE: "volatile"> |
+	<REGISTER: "register"> |
+	<UNSIGNED: "unsigned"> |
+	<TYPEDEF: "typedef"> |
+	<DFLT: "default"> |
+	<DOUBLE: "double"> |
+	<SIZEOF: "sizeof"> |
+	<SWITCH: "switch"> |
+	<RETURN: "return"> |
+	<EXTERN: "extern"> |
+	<STRUCT: "struct"> |
+	<STATIC: "static"> |
+	<SIGNED: "signed"> |
+	<WHILE: "while"> |
+	<BREAK: "break"> |
+	<UNION: "union"> |
+	<CONST: "const"> |
+	<FLOAT: "float"> |
+	<SHORT: "short"> |
+	<ELSE: "else"> |
+	<CASE: "case"> |
+	<LONG: "long"> |
+	<ENUM: "enum"> |
+	<AUTO: "auto"> |
+	<VOID: "void"> |
+	<CHAR: "char"> |
+	<GOTO: "goto"> |
+	<FOR: "for"> |
+	<INT: "int"> |
+	<IF: "if"> |
+	<DO: "do"> |
+	<SEMICOLON: ";"> |
+	<LEFTCURLYBRACKETS: "{"> |
+	<RIGHTCURLYBRACKETS: "}"> |
+	<COMMA:",">|
+	<FAR:"far">|
+	<NEAR:"near">
+}
+
+TOKEN : {
+ <IDENTIFIER: <LETTER> (<LETTER> | <DIGIT>)*>
+|  <#LETTER: ["$","A"-"Z","_","a"-"z"]>
+|  <#DIGIT: ["0"-"9"]>
+}
+
+//keil:when a source c file preprocessed to a .i file which is null, modify this to avoid errors.
+ASTTranslationUnit TranslationUnit() : {}
+{
+	(ExternalDeclaration())*
+	{ return jjtThis;}
+}
+
+//keil:modify to parse function declarations such as :		fun();
+void ExternalDeclaration() : {}
+{
+	try{
+	( LOOKAHEAD([<INTERRUPT>] [DeclarationSpecifiers()] [<INTERRUPT>] Declarator() [ MemoryModel() ] [ Reentrant() ] [ Interrupt() ] [ Using() ] [ Task() ] [ Priority() ] [ DeclarationList() ] "{" ) 
+	  FunctionDefinition() | 
+	  
+	  LOOKAHEAD( FunctionDeclaration(),{getToken(1).kind!=CParser_KeilConstants.TYPEDEF&&!isPointer()} ) 
+	  FunctionDeclaration()| 
+	  
+	  Declaration()|
+	  PRAGMA()
+	)
+	}catch(ParseException e){
+		error_skipto(SEMICOLON,e);
+	}
+}
+
+//KEIL: 
+
+//keil:中断程序调用外部函数时的控制参数对  zys		2010.3.5
+void PRAGMA():{Token t;}
+{
+	//"#pragma"  (LOOKAHEAD(2) t=<IDENTIFIER> {jjtThis.setPragmaInfo(t.image);})+ {getNextToken()=new Token(83);}
+	//"#pragma"  (LOOKAHEAD(2,{getToken(2)!=null}) t=<IDENTIFIER> {jjtThis.setPragmaInfo(t.image);})+
+	//"#pragma" 
+	t=<PIDENTIFIER> {jjtThis.setPragmaInfo(t.image);} ( LOOKAHEAD(2) t=<PIDENTIFIER> {jjtThis.setPragmaInfo(t.image);})* 
+	
+}
+
+void Interrupt() : {Token t;}
+{
+	<INTERRUPT> t=<INTEGER_LITERAL>{jjtThis.setInternum(t.image);}
+}
+void Using() : {Token t;}
+{
+	<USING> t=<INTEGER_LITERAL>{jjtThis.setUsingnum(t.image);}
+}
+void Reentrant() : {}
+{
+	<REENTRANT>
+}
+void Priority() : {Token t;}
+{
+	<PRIORITY> t=<INTEGER_LITERAL>{jjtThis.setPrioritynum(t.image);}
+}
+void Task() : {Token t;}
+{
+	<TASK> t=<INTEGER_LITERAL>{jjtThis.setTasknum(t.image);} 
+}
+void MemoryModel() : {Token t;}
+{
+	(
+		t=<SMALL>
+		| t=<COMPACT>
+		| t=<LARGE>
+ 	) {jjtThis.setImage(t.image);}
+}
+
+//KEIL: 
+void FunctionDefinition() : {}
+{
+	[LOOKAHEAD([<INTERRUPT>]DeclarationSpecifiers())[<INTERRUPT>] DeclarationSpecifiers()] 
+	[<INTERRUPT>] 
+	Declarator()
+	[ MemoryModel() ]
+	[ Reentrant() ]
+	[ Interrupt() ]
+	[ Using() ]
+	[ Task() ]
+	[ Priority() ]
+	[ DeclarationList() ]
+	CompoundStatement()
+}
+
+//keil:xqing
+void FunctionDeclaration(): {Token t;boolean flag=false;}
+{
+	[LOOKAHEAD([<INTERRUPT>]DeclarationSpecifiers())[<INTERRUPT>] DeclarationSpecifiers()] 
+	
+	[ Pointer() ] [ <INTERRUPT>] ( t=<IDENTIFIER> {jjtThis.setImage(t.image);} | "(" Declarator() {flag=true;jjtThis.setOperatorTypeAndFlag("",flag);flag=false;}")" )
+	( 
+	    LOOKAHEAD(3) "(" ParameterTypeList() {flag=true;} ")"{jjtThis.setOperatorTypeAndFlag("(",flag);flag=false;}  |
+	    "(" [ IdentifierList() {flag=true;} ] ")" {jjtThis.setOperatorTypeAndFlag("(",flag);flag=false;} 
+	)+   
+	[ MemoryModel() ]
+	[ Reentrant() ]
+	[ Interrupt() ]
+	[ Using() ]
+	[ Task() ]
+	[ Priority() ]
+	<SEMICOLON>
+}
+
+//keil:
+void Declaration() : {}
+{
+	try{
+	DeclarationSpecifiers() [ InitDeclaratorList() ] <SEMICOLON>
+	}catch(ParseException e){
+		error_skipto(SEMICOLON,e);
+	}finally{
+		if(!(typedefParsingStack.empty()) && ((Boolean)typedefParsingStack.peek()).booleanValue()){
+		   	popTypedefParsingStack("Encounter InitDeclaratorList end");
+	    }
+	}
+}
+
+void DeclarationList() : {}
+{
+	(Declaration())+
+}
+
+void DeclarationSpecifiers() : {}
+{
+	  StorageClassSpecifier() [ LOOKAHEAD(DeclarationSpecifiers())
+	        DeclarationSpecifiers() ] |
+	  TypeSpecifier()  [ LOOKAHEAD(DeclarationSpecifiers())
+	        DeclarationSpecifiers() ] |
+	  TypeQualifier() [ LOOKAHEAD(DeclarationSpecifiers())
+	        DeclarationSpecifiers() ] 
+}
+
+void StorageClassSpecifier() : {Token t;}
+{
+	( t=<AUTO>{jjtThis.setImage(t.image);} 
+	| t=<REGISTER> {jjtThis.setImage(t.image);} 
+	| t=<STATIC> {jjtThis.setImage(t.image);} 
+	| t=<EXTERN> {jjtThis.setImage(t.image);} 
+	| t=<TYPEDEF>
+	{
+		jjtThis.setImage(t.image);
+		pushTypedefParsingStack(Boolean.TRUE,"Encounter a StorageClassSpecifier");
+	} )
+}
+
+//KEIL: add Data Types
+void TypeSpecifier() : {}
+{
+	( 
+	  <BIT> {jjtThis.setImage("bit");}
+	| <SBIT> {jjtThis.setImage("sbit");}
+	| <SFR> {jjtThis.setImage("sfr");}
+	| <SFR16> {jjtThis.setImage("sfr16");}
+	| <VOID> {jjtThis.setImage("void");}
+	| <CHAR> {jjtThis.setImage("char");}
+	| <SHORT> {jjtThis.setImage("short");}
+	| <INT> {jjtThis.setImage("int");}
+	| <LONG> {jjtThis.setImage("long");}
+	| <FLOAT> {jjtThis.setImage("float");}
+	| <DOUBLE> {jjtThis.setImage("double");}
+	| <SIGNED> {jjtThis.setImage("signed");}
+	| <UNSIGNED> {jjtThis.setImage("unsigned");}
+	| StructOrUnionSpecifier() 
+	| EnumSpecifier() 
+	| LOOKAHEAD( { isType(getToken(1).image) } ) TypedefName() 
+	)
+}
+
+//KEIL: add Memory Types
+void TypeQualifier() : {Token t;}
+{
+	( t=<CONST> {jjtThis.setImage(t.image);} 
+	| t=<VOLATILE> {jjtThis.setImage(t.image);} 
+	| t=<FAR> {jjtThis.setImage(t.image);} 
+	| t=<NEAR> {jjtThis.setImage(t.image);} 
+	| t=<CODE> {jjtThis.setImage(t.image);} 
+	| t=<DATA>  {jjtThis.setImage(t.image);} 
+	| t=<IDATA> {jjtThis.setImage(t.image);} 
+	| t=<BDATA> {jjtThis.setImage(t.image);} 
+	| t=<XDATA> {jjtThis.setImage(t.image);} 
+	| t=<PDATA> {jjtThis.setImage(t.image);} 
+	| t=<ALIEN> {jjtThis.setImage(t.image);} )
+}
+
+void StructOrUnionSpecifier() : {Token t = null;}
+{
+	{
+		pushTypedefParsingStack(Boolean.FALSE,"Enter Union&Struct");
+	}
+	try{
+		StructOrUnion() ( LOOKAHEAD(3) [ t=<IDENTIFIER>{jjtThis.setImage(t.image);} ] 
+		<LEFTCURLYBRACKETS> 
+		{
+			structStack.push(Boolean.TRUE);
+		}
+		try {
+			StructDeclarationList() 
+		} catch (Exception ex) {
+			DeclarationException(ex);
+		} finally {
+			structStack.pop();
+		}
+		<RIGHTCURLYBRACKETS> | t=<IDENTIFIER>{jjtThis.setImage(t.image);} )
+	}catch(ParseException e){
+		error_skipto(SEMICOLON,e);
+	}finally{
+		popTypedefParsingStack("Enter Union&Struct");
+	}
+}
+
+void StructOrUnion() : {Token t;}
+{
+	( t=<STRUCT>{jjtThis.setImage(t.image);}  | t=<UNION>{jjtThis.setImage(t.image);}  )
+}
+
+void StructDeclarationList() : {}
+{
+	(StructDeclaration())+
+}
+
+void InitDeclaratorList() : {}
+{
+	try{
+	InitDeclarator() (<COMMA> InitDeclarator())*
+	}catch(ParseException e){
+		error_skipto(SEMICOLON,e);
+	}finally{
+		
+	}
+}
+
+//Keil:add _at_ declaration
+void InitDeclarator() : {}
+{
+	LOOKAHEAD(<AT> Constant() Declarator())<AT> Constant() Declarator() 
+	|LOOKAHEAD(<AT>"(" Constant() ")"Declarator())<AT>"(" Constant() ")"Declarator() 
+	|Declarator() [ "=" Initializer() | <AT> AssignmentExpression()] 
+}
+
+void StructDeclaration() : {}
+{
+	try{
+	SpecifierQualifierList() 
+	[StructDeclaratorList()]
+	<SEMICOLON>
+	}catch(ParseException e){
+		error_skipto(SEMICOLON,e);
+	}
+}
+
+void SpecifierQualifierList() : {}
+{
+	  TypeSpecifier() [ LOOKAHEAD(SpecifierQualifierList())
+	        SpecifierQualifierList() ]|
+	  TypeQualifier() [ LOOKAHEAD(SpecifierQualifierList())
+	        SpecifierQualifierList() ]
+}
+
+void StructDeclaratorList() : {}
+{
+	StructDeclarator() ( <COMMA> StructDeclarator() )*
+}
+
+void StructDeclarator() : {}
+{
+	LOOKAHEAD([Declarator()] ":")
+	[ Declarator() ] ":" ConstantExpression() 
+	|Declarator()
+}
+
+void EnumSpecifier() : {Token t = null;}
+{
+	<ENUM> ( LOOKAHEAD(3) [ t=<IDENTIFIER>{jjtThis.setImage(t.image);} ] <LEFTCURLYBRACKETS> EnumeratorList() [<COMMA>] <RIGHTCURLYBRACKETS> | t=<IDENTIFIER>{jjtThis.setImage(t.image);} )
+}
+
+void EnumeratorList() : {}
+{
+	Enumerator() (LOOKAHEAD(2)  <COMMA> Enumerator())*
+}
+
+void Enumerator() : {Token t = null;}
+{
+	t=<IDENTIFIER>{jjtThis.setImage(t.image);} [ "=" ConstantExpression() ]	
+}
+
+void Declarator() : {}
+{
+	[TypeQualifier()] [ Pointer() ] DirectDeclarator()
+}
+
+void DirectDeclarator() : { Token t;boolean flag=false;}
+{	
+	( t = <IDENTIFIER>{ 
+		jjtThis.setImage(t.image);
+		if(!(typedefParsingStack.empty()) && ((Boolean)typedefParsingStack.peek()).booleanValue()){
+			addType(t.image);
+			jjtThis.setIstypedef(true);
+	  	}
+	 }
+	 | "(" Declarator(){flag=true;jjtThis.setOperatorTypeAndFlag("",flag);flag=false;} ")" 
+	)
+	{ typedefParsingStack.push( Boolean.FALSE ); }
+	
+	( "[" [ ConstantExpression(){flag=true;} ] "]"{jjtThis.setOperatorTypeAndFlag("[",flag);flag=false;}  |
+	  LOOKAHEAD(3) "(" ParameterTypeList(){flag=true;} ")"{jjtThis.setOperatorTypeAndFlag("(",flag);flag=false;}  |
+	  "(" [ IdentifierList(){flag=true;} ] ")" {jjtThis.setOperatorTypeAndFlag("(",flag);flag=false;} 
+	)*
+	{ typedefParsingStack.pop(); }   
+}
+
+void Pointer() : {}
+{
+	"*" [ TypeQualifierList() ] [ Pointer() ]
+}
+
+void TypeQualifierList() : {}
+{
+	(TypeQualifier())+
+}
+
+void ParameterTypeList() : {}
+{
+	{ 
+		pushTypedefParsingStack(Boolean.FALSE,"Enter ParameterTypeList");
+	}
+	try{
+	ParameterList() [<COMMA> "..."{jjtThis.setVararg(true);} ]
+	}catch(Exception e){
+		DeclarationException(e);
+	}finally{
+		popTypedefParsingStack("Exit ParameterTypeList");
+	}
+}
+
+void ParameterList() : {}
+{
+	ParameterDeclaration() (LOOKAHEAD(2) <COMMA> ParameterDeclaration())*
+}
+
+void ParameterDeclaration() : {Token t;}
+{
+	 (DeclarationSpecifiers() ( LOOKAHEAD(Declarator()) Declarator() | [ AbstractDeclarator() ] ))
+	 |t=<IDENTIFIER>{jjtThis.setIdentifier(t.image);}
+}
+
+//todo: not handle this yet
+void IdentifierList() : {Token t;}
+{
+	t=<IDENTIFIER>{jjtThis.addIndentifier(t.image);} (<COMMA> t=<IDENTIFIER>{jjtThis.addIndentifier(t.image);})*
+}
+
+void Initializer() : {}
+{
+	( AssignmentExpression() |
+	  <LEFTCURLYBRACKETS> InitializerList() [<COMMA>] <RIGHTCURLYBRACKETS> )
+}
+
+void InitializerList() : {}
+{
+	Initializer() (LOOKAHEAD(2) <COMMA> Initializer())*
+}
+
+void TypeName() : {}
+{
+	SpecifierQualifierList() [ AbstractDeclarator() ]
+
+}
+
+void AbstractDeclarator() : {}
+{
+	LOOKAHEAD([Pointer()] DirectAbstractDeclarator())
+	[Pointer()] DirectAbstractDeclarator() |
+	Pointer() 
+	 
+}
+
+void DirectAbstractDeclarator() : {boolean flag=false;}
+{
+	( LOOKAHEAD(2) "(" AbstractDeclarator(){flag=true;} ")"{jjtThis.setOperatorTypeAndFlag("",flag);flag=false;} |
+	               "[" [ConstantExpression(){flag=true;}] "]"{jjtThis.setOperatorTypeAndFlag("[",flag);flag=false;} |
+	               "(" [ParameterTypeList(){flag=true;}] ")"{jjtThis.setOperatorTypeAndFlag("(",flag);flag=false;} )
+
+	  ( "[" [ ConstantExpression() {flag=true;}] "]"{jjtThis.setOperatorTypeAndFlag("[",flag);flag=false;} | "(" [ ParameterTypeList() {flag=true;}] ")"{jjtThis.setOperatorTypeAndFlag("(",flag);flag=false;} )*
+}
+
+void TypedefName() : {Token t;}
+{
+	t=<IDENTIFIER>{jjtThis.setImage(t.image);} 
+}
+
+void Statement() : {}
+{
+	try{
+	( 
+	  LOOKAHEAD(2) LabeledStatement() |
+	  PRAGMA() |
+	  ExpressionStatement() |
+	  CompoundStatement() |
+	  SelectionStatement() |
+	  IterationStatement() |
+	  JumpStatement() 
+	   )
+	}catch(ParseException e){
+		error_skipto(SEMICOLON,e);
+	}
+}
+
+void LabeledStatement() : {Token t;}
+{
+	( t=<IDENTIFIER>{{jjtThis.setImage(t.image);} } ":" Statement() |
+	  t=<CASE>{jjtThis.setImage(t.image);}  ConstantExpression() ":" Statement() |
+	  t=<DFLT>{jjtThis.setImage(t.image);}  ":" Statement() )
+}
+
+void ExpressionStatement() : {}
+{
+	[ Expression() ] <SEMICOLON>
+}
+
+void CompoundStatement() : {}
+{
+	<LEFTCURLYBRACKETS> 
+		[ LOOKAHEAD(DeclarationList()) DeclarationList() ]
+	    [ StatementList() ]
+	<RIGHTCURLYBRACKETS>
+}
+
+void StatementList() : {}
+{	
+	try{
+	(Statement())+
+	}catch(ParseException e){
+		error_skipto(SEMICOLON,e);
+	}
+}
+
+void SelectionStatement() : {Token t;}
+{
+	( t=<IF>{jjtThis.setImage(t.image);}  "(" Expression() ")" Statement() [ LOOKAHEAD(2) <ELSE> Statement() ] |
+	  t=<SWITCH>{jjtThis.setImage(t.image);}  "(" Expression() ")" Statement() )
+}
+
+void IterationStatement() : {Token t;}
+{
+	( t=<WHILE>{jjtThis.setImage(t.image);}  "(" Expression() ")" Statement() |
+	  t=<DO>{jjtThis.setImage(t.image);}  Statement() <WHILE> "(" Expression() ")" <SEMICOLON> |
+	  t=<FOR>{jjtThis.setImage(t.image);}  "(" [ Expression(){jjtThis.forChild[0]=true;} ] <SEMICOLON> [ Expression(){jjtThis.forChild[1]=true;} ] <SEMICOLON> [ Expression(){jjtThis.forChild[2]=true;} ] ")" Statement() )
+}
+
+void JumpStatement() : {Token t,l;}
+{
+	( t=<GOTO>{jjtThis.setImage(t.image);} l=<IDENTIFIER>{jjtThis.setLabel(l.image);} <SEMICOLON> |
+	  t=<CONTINUE>{jjtThis.setImage(t.image);} <SEMICOLON> |
+	  t=<BREAK>{jjtThis.setImage(t.image);} <SEMICOLON> |
+	  t=<RETURN>{jjtThis.setImage(t.image);} [ Expression() ] <SEMICOLON> )
+}
+
+void Expression() : {}
+{
+	AssignmentExpression() ( <COMMA> AssignmentExpression() )*
+}
+
+void AssignmentExpression() : {}
+{
+	  LOOKAHEAD(UnaryExpression() AssignmentOperator()) UnaryExpression() AssignmentOperator() AssignmentExpression() |
+	  LOOKAHEAD(3) ConditionalExpression()
+}
+
+void AssignmentOperator() : {}
+{
+	( "="{jjtThis.setOperatorType("=");} | "*=" {jjtThis.setOperatorType("*=");} | "/=" {jjtThis.setOperatorType("/=");}  | "%=" {jjtThis.setOperatorType("%=");}  | "+="  {jjtThis.setOperatorType("+=");} | "-="  {jjtThis.setOperatorType("-=");} | "<<=" {jjtThis.setOperatorType("<<=");}  | ">>="  {jjtThis.setOperatorType(">>=");} | "&="  {jjtThis.setOperatorType("&=");} | "^=" {jjtThis.setOperatorType("^=");}  | "|=" {jjtThis.setOperatorType("|=");}  )
+
+}
+
+
+void ConditionalExpression() #ConditionalExpression(>1): {}
+{
+	LogicalORExpression() [ "?" Expression() ":" ConditionalExpression() ]
+}
+
+void ConstantExpression() : {}
+{
+	ConditionalExpression()
+}
+
+void LogicalORExpression() #LogicalORExpression(>1): {}
+{
+	LogicalANDExpression() ( "||"  {jjtThis.setOperatorType("||");}LogicalANDExpression() )*
+}
+
+void LogicalANDExpression() #LogicalANDExpression(>1): {}
+{
+	InclusiveORExpression() ( "&&"{jjtThis.setOperatorType("&&");} InclusiveORExpression() )*
+}
+
+void InclusiveORExpression() #InclusiveORExpression(>1): {}
+{
+	ExclusiveORExpression() ( "|" {jjtThis.setOperatorType("|");} ExclusiveORExpression() )*
+}
+
+void ExclusiveORExpression() #ExclusiveORExpression(>1): {}
+{
+	ANDExpression() ( "^"  {jjtThis.setOperatorType("^");}ANDExpression() )*
+}
+
+void ANDExpression() #ANDExpression(>1): {}
+{
+	EqualityExpression() ( LOOKAHEAD(2) "&"{jjtThis.setOperatorType("&");} EqualityExpression() )*
+}
+
+void EqualityExpression() #EqualityExpression(>1): {}
+{
+	RelationalExpression() ( ( "==" {jjtThis.setOperatorType("==");}| "!=" {jjtThis.setOperatorType("!=");} ) RelationalExpression() )*
+}
+
+void RelationalExpression() #RelationalExpression(>1): {}
+{
+	ShiftExpression() ( LOOKAHEAD(2) ( "<" {jjtThis.setOperatorType("<");}  | ">" {jjtThis.setOperatorType(">");}  | "<="  {jjtThis.setOperatorType("<=");} | ">=" {jjtThis.setOperatorType(">=");}  )  ShiftExpression() )*
+}
+
+void ShiftExpression() #ShiftExpression(>1): {}
+{
+	AdditiveExpression() ( ( "<<" {jjtThis.setOperatorType("<<");}  | ">>"  {jjtThis.setOperatorType(">>");} )  AdditiveExpression() )*
+}
+
+void AdditiveExpression() #AdditiveExpression(>1): {}
+{
+	MultiplicativeExpression() (LOOKAHEAD(2) ( "+" {jjtThis.setOperatorType("+");}  | "-"  {jjtThis.setOperatorType("-");} ) MultiplicativeExpression())*
+}
+
+void MultiplicativeExpression() #MultiplicativeExpression(>1): {}
+{
+	CastExpression()  (LOOKAHEAD(2) ( "*"  {jjtThis.setOperatorType("*");} | "/" {jjtThis.setOperatorType("/");}  | "%" {jjtThis.setOperatorType("%");}  ) CastExpression())*
+}
+
+void CastExpression() #CastExpression(>1): {}
+{
+	( LOOKAHEAD("(" TypeName() ")" CastExpression() ) "(" TypeName() ")" CastExpression() |
+	  UnaryExpression() )
+}
+
+void UnaryExpression() : {Token t;}
+{
+	( LOOKAHEAD(3) PostfixExpression() |
+	  "++"  {jjtThis.setOperatorType("++");} UnaryExpression() |
+	  "--" {jjtThis.setOperatorType("--");}  UnaryExpression() |
+	  UnaryOperator() CastExpression() |
+	  t=<SIZEOF>{jjtThis.setImage(t.image);} ( LOOKAHEAD(UnaryExpression() ) UnaryExpression() | "(" TypeName() ")" ) )
+}
+
+void UnaryOperator() : {}
+{
+	( "&" {jjtThis.setOperatorType("&");}  | "*" {jjtThis.setOperatorType("*");}  | "+" {jjtThis.setOperatorType("+");}  | "-" {jjtThis.setOperatorType("-");}  | "~" {jjtThis.setOperatorType("~");}  | "!"  {jjtThis.setOperatorType("!");} )
+}
+
+void FieldId():{Token t;}{
+	t=<IDENTIFIER>{jjtThis.setImage(t.image);} 
+}
+
+void PostfixExpression() : {boolean flag=false;}
+{
+	PrimaryExpression() ( "[" Expression() {jjtThis.setOperatorTypeAndFlag("[",true);}"]" |
+	                      "(" [ LOOKAHEAD(ArgumentExpressionList() ) ArgumentExpressionList() {flag=true;}] {jjtThis.setOperatorTypeAndFlag("(",flag);flag=false;}")" |
+	  					  "."  FieldId() {jjtThis.setOperatorTypeAndFlag(".",true);}|
+	  					  "->" FieldId() {jjtThis.setOperatorTypeAndFlag("->",true);}|
+	  					  "++"  {jjtThis.setOperatorTypeAndFlag("++",false);} |
+	  					  "--"  {jjtThis.setOperatorTypeAndFlag("--",false);} )*
+}
+
+void PrimaryExpression() : {Token t;}
+{
+	( t=<IDENTIFIER> {jjtThis.setImage(t.image);} 
+	| Constant() 
+	| LOOKAHEAD(2) "(" Expression() ")"
+	)
+}
+
+void ArgumentExpressionList() : {}
+{
+	AssignmentExpression() ( <COMMA> AssignmentExpression() )*
+}
+
+void Constant() : {Token t;}
+{
+	(
+		t=<INTEGER_LITERAL> 
+ 	|	t=<FLOATING_POINT_LITERAL>
+ 	|	t=<CHARACTER_LITERAL>
+ 	|	(t=<STRING_LITERAL>)+
+ 	) {jjtThis.setImage(t.image);}
+}

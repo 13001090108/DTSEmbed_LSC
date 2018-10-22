@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MLF_WRONG-State-Machine Version="0.1" Language="C" 
+	Type="MLF_WRONG" 
+	isPathSensitive="true" 
+	isVariableRelated="true" 
+	Action ="createMLF_WRONGStateMachines" 
+	Class ="softtest.rules.gcc.fault.MLF_WRONGStateMachine" 
+	Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine">
+	 
+	<State Name="Start" isStartState="true">
+	    <Transition ToState="END">
+			<Xpath Value=".//UnaryExpression/PostfixExpression/PrimaryExpression[@Method='true']" 
+			    Action="checkCAlloc" Args ="java.util.List,softtest.fsm.c.FSMMachineInstance">
+			</Xpath>
+		</Transition>
+		
+		<Transition ToState="END">
+			<Xpath Value=".//Expression/AssignmentExpression[count(*)=3 and ./AssignmentOperator" 
+			    Action="checkAssign" Args ="java.util.List,softtest.fsm.c.FSMMachineInstance">
+			</Xpath>
+		</Transition>
+		
+		<Transition ToState="END">
+			<Xpath Value=".//Declaration//InitDeclarator[count(*)=2]" 
+			    Action="checkAssignByInit" Args ="java.util.List,softtest.fsm.c.FSMMachineInstance">
+			</Xpath>
+		</Transition>
+		
+		<Transition ToState="ERROR">
+		    <Xpath Value=".//UnaryExpression/PostfixExpression/PrimaryExpression[@Method='true']" 
+			    Action="checkCRelease" Args ="java.util.List,softtest.fsm.c.FSMMachineInstance">
+			</Xpath>
+		</Transition>
+	 </State>
+	 
+	 <State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">
+		</Transition>
+	 </State>
+	 
+	 <State Name="END" isFinalState="true">
+	 </State>
+</MLF_WRONG-State-Machine>

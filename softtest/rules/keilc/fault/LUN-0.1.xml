@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LUN-State-Machine Version="0.1" Language="C" Type="LUN" isPathSensitive="true" isVariableRelated="false" 
+		Action ="createLUNStateMachines" 
+		Class ="softtest.rules.keilc.fault.LUNStateMachine" 
+		Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine">
+	<State Name="Start" isStartState="true">
+		<Transition ToState="LOCK">
+			<AlwaysTrue Action="checkLock" Args ="softtest.cfg.c.VexNode,softtest.fsm.c.FSMMachineInstance"/>
+		</Transition>
+		<Transition ToState="ERROR">
+			<AlwaysTrue Action="checkError" Args ="softtest.cfg.c.VexNode,softtest.fsm.c.FSMMachineInstance"/>
+		</Transition>
+	</State>		
+	<State Name="LOCK">
+		<Transition ToState="ERROR">
+			<Scope Type="out"/>						
+		</Transition>
+		<Transition ToState="ERROR">
+			<Xpath Value=".//AssignmentExpression[@Image='intUnlock']/UnaryExpression/PostfixExpression/ArgumentExpressionList/AssignmentExpression/UnaryExpression/PostfixExpression/PrimaryExpression" 
+						Action="checkNotMatch" Args="java.util.List,softtest.fsm.c.FSMMachineInstance" />
+		</Transition>
+	
+		<Transition ToState="END">
+			<Xpath Value=".//AssignmentExpression[@Image='intUnlock']/UnaryExpression/PostfixExpression/ArgumentExpressionList/AssignmentExpression/UnaryExpression/PostfixExpression/PrimaryExpression[count(*)=0]" 
+						Action="checkMatch" Args="java.util.List,softtest.fsm.c.FSMMachineInstance" />
+		</Transition>
+	</State>
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">			
+		</Transition>
+	</State>	
+	<State Name="END" isFinalState="true">
+	</State>
+</LUN-State-Machine>

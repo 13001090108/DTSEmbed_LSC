@@ -1,0 +1,47 @@
+__builtin_va_list##char *
+__signed__##signed 
+__signed##signed
+__builtin_va_start(ap,v)##( ap = (va_list)&v + _INTSIZEOF(v) )
+__builtin_va_arg(ap,t)##( *(t *)((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)) )
+__builtin_va_end(ap)##( ap = (va_list)0 )
+va_start(ap,v)##( ap = (va_list)&v + _INTSIZEOF(v) )
+va_arg(ap,t)##( *(t *)((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)) )
+va_end(ap)##( ap = (va_list)0 )
+__builtin_offsetof(s,m)##((size_t)(&(((s *)0)-> m)))
+__builtin_offsetof (s,m)##((size_t)(&(((s *)0)-> m)))
+_INTSIZEOF(n)##( (sizeof(n) + sizeof(int) - 1) & ~(sizeof(int) - 1) )
+VOS_Assert_X(a)##if(!(a)) exit(0)
+sfr\s*at##sfr _at_
+sbit\s*at##sfr _at_
+cregister##
+ioport##
+__STDC_IEC_599__##1
+__STDC_IEC_599_COMPLEX__##1
+__STDC_VERSION__##199991L
+__STDC_ISO_10646__##200104L
+
+//idata##
+//__idata##
+pdata##
+__pdata##
+//code##
+//__code##
+//bit##char
+//__bit##bit
+reentrant##
+__reentrant##
+critical##
+__critical##
+naked##
+__naked##
+globaldef##
+globalref##
+globalvalue##int
+noshare##
+readonly##
+variant_struct##struct
+variant_union##union
+size_t##unsigned int
+uint8_t##int
+//u_char##char
+BOOL##int

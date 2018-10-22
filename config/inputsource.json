@@ -1,0 +1,15 @@
+[
+    "scanf",
+    "gets",
+    "strcpy",
+    "strdup",
+    "malloc",
+    "calloc",
+    "socket",
+    "realloc",
+    "gets",
+    "getline",
+    "getchar",
+    "fopen",
+    "fread"
+]

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RE_Summary>
+	<Method name="abs" libPos="stdlib.h" signature="int abs(int x);">
+		<Feature type = "RESERVED"/>
+		<Return type = "Int" value = "[0,inf]"/>
+	</Method>
+	<Method name="ldiv" libPos="stdlib.h" signature="typedef struct { long quot, rem; } ldiv_t;ldiv_t ldiv(long x, long y);">
+		<Feature type = "RESERVED"/>
+	</Method>
+	<Method name="div" libPos="stdlib.h" signature="typedef struct { int quot, rem; } div_t;div_t div(int x, int y);">
+		<Feature type = "RESERVED"/>
+	</Method>
+	<Method name="acos" libPos="math.h" signature="double acos(double x);">
+		<Feature type = "RESERVED"/>
+		<Return type = "Double" value = "[-0.0,3.1415926]"/>
+	</Method>
+	<Method name="asin" libPos="math.h" signature="double asin(double x);">
+		<Feature type = "RESERVED"/>
+		<Return type = "Double" value = "[-1.5707963,1.5707963]"/>
+	</Method>
+	<Method name="atan" libPos="math.h" signature="double atan(double x);">
+		<Feature type = "RESERVED"/>
+		<Return type = "Double" value = "[-1.5707963,1.5707963]"/>
+	</Method>
+	<Method name="atan2" libPos="math.h" signature="double atan2(double x, double y);">
+		<Feature type = "RESERVED"/>
+		<Return type = "Double" value = "[-1.5707963,1.5707963]"/>
+	</Method>
+	<Method name="ceil" libPos="math.h" signature="double ceil(double x);">
+		<Feature type = "RESERVED"/>
+	</Method>
+	<Method name="cos" libPos="math.h" signature="double cos(double x);">
+		<Feature type = "RESERVED"/>
+		<Return type = "Double" value = "[-1.0,1.0]"/>
+	</Method>
+	<Method name="cosh" libPos="math.h" signature="double cosh(double x);">
+		<Feature type = "RESERVED"/>
+	</Method>
+	<Method name="exp" libPos="math.h" signature="double exp(double x);">
+		<Feature type = "RESERVED"/>
+	</Method>
+	<Method name="frexp" libPos="math.h" signature="double frexp(double x, int *y);">
+		<Feature type = "RESERVED"/>
+	</Method>
+	<Method name="ldexp" libPos="math.h" signature="double ldexp(double x, int y);">
+		<Feature type = "RESERVED"/>
+	</Method>
+	<Method name="log" libPos="math.h" signature="double log(double x);">
+		<Feature type = "RESERVED"/>
+	</Method>
+	<Method name="log10" libPos="math.h" signature="double log10(double x);">
+		<Feature type = "RESERVED"/>
+	</Method>
+	<Method name="pow" libPos="math.h" signature="double pow(double x, double y);">
+		<Feature type = "RESERVED"/>
+	</Method>
+	<Method name="sin" libPos="math.h" signature="double sin(double x);">
+		<Feature type = "RESERVED"/>
+		<Return type = "Double" value = "[-1.0,1.0]"/>
+	</Method>
+	<Method name="sinh" libPos="math.h" signature="double sinh(double x);">
+		<Feature type = "RESERVED"/>
+	</Method>
+	<Method name="sqrt" libPos="math.h" signature="double sqrt(double x);">
+		<Feature type = "RESERVED"/>
+		<Return type = "Double" value = "[0.0,inf]"/>
+	</Method>
+	<Method name="tan" libPos="math.h" signature="double tan(double x);">
+		<Feature type = "RESERVED"/>
+	</Method>
+	<Method name="tanh" libPos="math.h" signature="double tanh(double x);">
+		<Feature type = "RESERVED"/>
+		<Return type = "Double" value = "[-1.0,1.0]"/>
+	</Method>
+	
+	
+	<Method name = "free" libPos = "stdlib.h" signature = "int free( void *region );">
+        <Feature type = "FEATURE_MM"  subtype = "0"  paramIndex = "1"/>
+    </Method>
+	
+	<Method name="calloc" libPos="stdlib.h" signature="typedef unsigned int size_t;void * calloc( size_t nmemb, size_t size );">
+		<Feature type = "FEATURE_MM"  subtype = "1"  paramIndex = "1"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+		<Allocate type = "Point" value = "true"/>
+	</Method>
+	<Method name="malloc" libPos="stdlib.h" signature="typedef unsigned int size_t;void * malloc( size_t size );">
+		<Feature type = "FEATURE_MM"  subtype = "1"  paramIndex = "1"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+		<Allocate type = "Point" value = "true"/>
+	</Method>
+	<Method name="xmalloc" libPos="stdlib.h" signature="typedef unsigned int size_t;void * xmalloc( size_t size );">
+		<Feature type = "FEATURE_MM"  subtype = "1"  paramIndex = "1"/>
+		<Return type = "Point" value = "NOTNULL"/>
+		<Allocate type = "Point" value = "true"/>
+	</Method>
+	<Method name="strdup" libPos="string.h" signature="char * strdup( const char *s );">
+		<Feature type = "RESERVED"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="strtok" libPos="string.h" signature="char * strtok( char *s, const char *delim);">
+		<Feature type = "RESERVED"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="strlen" libPos="string.h" signature="unsigned int strlen(char *s);">
+		<Feature type = "RESERVED"/>
+		<Return type = "Int" value = "[0,inf]"/>
+	</Method>
+	<Method name="lfind" libPos="stdlib.h" signature="typedef unsigned int size_t;void * lfind( const void *key, const void *base, size_t *nmemb,
+	size_t size, int(* compar) (const void * ,const void *) );">
+		<Feature type = "RESERVED"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="ttyname" libPos="unistd.h" signature="char * ttyname( int desc );">
+		<Feature type = "RESERVED"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="getenv" libPos="stdlib.h" signature="char * getenv( const char *name );">
+		<Feature type = "RESERVED"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="popen" libPos="stdio.h" signature="typedef struct{}FILE;FILE * popen( const char * command, const char * type );">
+		<Feature type = "RESERVED"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="getcwd" libPos="unistd.h" signature="typedef unsigned int size_t;char * getcwd( char * buf, size_t size );">
+		<Feature type = "RESERVED"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="mktemp" libPos="stdlib.h" signature="char * mktemp( char * template );">
+		<Feature type = "RESERVED"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="gets" libPos="stdlib.h" signature="char * gets( char * s );">
+		<Feature type = "RESERVED"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="freopen" libPos="stdio.h" signature="typedef struct{}FILE;FILE * freopen( const char * path, const char * mode, FILE * stream );">
+		<Feature type = "RESERVED"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="fopen" libPos="stdio.h" signature="typedef struct{}FILE;FILE * fopen( const char * path, const char * mode );">
+		<Feature type = "RESERVED"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="fgets" libPos="stdio.h" signature="typedef struct{}FILE;char * fgets( char * s, int size, FILE * stream );">
+		<Feature type = "RESERVED"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="fdopen" libPos="stdio.h" signature="typedef struct{}FILE;FILE * fdopen( int fildes, const char * mode );">
+		<Feature type = "RESERVED"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+</RE_Summary>

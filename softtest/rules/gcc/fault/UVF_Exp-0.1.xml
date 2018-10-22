@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UVF_Exp-State-Machine Version="0.1" Language="C" Type="UVF_Exp" 
+		isPathSensitive="true" 
+		isVariableRelated="true" 
+		Action ="createUVF_ExpStateMachines" 
+		Class ="softtest.rules.gcc.fault.UVF_ExpStateMachine" 
+		Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine">
+
+	<State Name="Start" isStartState="true">		
+		<Transition ToState="DeclarationOnly">
+			<Xpath  Value = ".//InitDeclaratorList/InitDeclarator[not(./Initializer)]/Declarator/DirectDeclarator  | .//Expression/AssignmentExpression[./AssignmentOperator and ./AssignmentExpression/CastExpression/UnaryExpression/PostfixExpression/PrimaryExpression[@Image='malloc' or @Image='realloc']]/UnaryExpression/PostfixExpression/PrimaryExpression"
+					Action="checkSameVariable"  Args ="java.util.List,softtest.fsm.c.FSMMachineInstance">
+			</Xpath>
+		</Transition>			
+	</State>
+	
+	<State Name="DeclarationOnly">	
+		<Transition ToState = "END">
+			<AlwaysTrue 
+				   Action="checkInial" Args="softtest.cfg.c.VexNode,softtest.fsm.c.FSMMachineInstance">
+			</AlwaysTrue>					
+		</Transition>
+		<Transition ToState = "END">
+			<AlwaysTrue 
+				   Action="checkArrayInial" Args="softtest.cfg.c.VexNode,softtest.fsm.c.FSMMachineInstance">
+			</AlwaysTrue>					
+		</Transition>
+		<Transition ToState="ERROR">
+			<AlwaysTrue 
+				   Action="checkUse" Args="softtest.cfg.c.VexNode,softtest.fsm.c.FSMMachineInstance">
+			</AlwaysTrue>			
+		</Transition>					
+	</State>
+				
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">			
+		</Transition>
+	</State>	
+	
+	<State Name="END" isFinalState="true">
+	</State>
+	
+</UVF_Exp-State-Machine>

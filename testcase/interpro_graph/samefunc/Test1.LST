@@ -1,0 +1,37 @@
+C51 COMPILER V9.00   TEST1                                                                 04/13/2010 18:40:56 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE TEST1
+OBJECT MODULE PLACED IN E:\javaprogram\DTSEmbed\testcase\interpro_graph\samefunc\Test1.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\c51.exe E:\javaprogram\DTSEmbed\testcase\interpro_graph\samefunc\Test1.c INCDIR(C:\
+                    -Keil\C51\INC\ADI;C:\Keil\C51\INC\Atmel;C:\Keil\C51\INC\Infineon;C:\Keil\C51\INC\Philips;C:\Keil\C51\INC\Evatronix;C:\Kei
+                    -l\C51\INC\TI;C:\Keil\C51\INC\Dallas;E:\javaprogram\DTSEmbed\testcase\interpro_graph\userheadfile) PP(E:\javaprogram\DTSE
+                    -mbed\temp\Test1.i)
+
+line level    source
+
+   1          extern int g();
+   2          int f();
+   3          int f(){
+   4   1              return 1;
+   5   1      }
+   6          
+   7          int main(){
+   8   1              f();
+   9   1              g();
+  10   1      }
+*** WARNING C290 IN LINE 10 OF E:\JAVAPROGRAM\DTSEMBED\TESTCASE\INTERPRO_GRAPH\SAMEFUNC\TEST1.C: missing return value
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     11    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

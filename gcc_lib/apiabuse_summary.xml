@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APIABUSE_Summary>
+	<Method name="srand" libPos="stdlib.h" signature="void srand ( unsigned int seed );">
+		<Feature type="API_ABUSE" Description="不安全的随机数：使用不可靠的随机函数所产生的随机行为或数据不能达到应有的效果" Rank="普通" />
+	</Method>	
+	<Method name="rand" libPos="stdlib.h" signature="int rand ( void );">
+		<Feature type="API_ABUSE" Description="不安全的随机数：使用不可靠的随机函数所产生的随机行为或数据不能达到应有的效果" Rank="普通" />
+	</Method>
+	<Method name="random" libPos="stdlib.h" signature="int random ( int n );">
+		<Feature type="API_ABUSE" Description="不安全的随机数：使用不可靠的随机函数所产生的随机行为或数据不能达到应有的效果" Rank="普通" />
+	</Method>
+	<Method name="srandom" libPos="stdlib.h" signature="void srandom ( unsigned seed );">
+		<Feature type="API_ABUSE" Description="不安全的随机数：使用不可靠的随机函数所产生的随机行为或数据不能达到应有的效果" Rank="普通" />
+	</Method>
+	<Method name="setstate" libPos="stdlib.h" signature="char *setstate( const char *state );">
+		<Feature type="API_ABUSE" Description="不安全的随机数：使用不可靠的随机函数所产生的随机行为或数据不能达到应有的效果" Rank="普通" />
+	</Method>
+	<Method name="initstate" libPos="stdlib.h" signature="char *initstate(unsigned seed, char *state, size_t size);">
+		<Feature type="API_ABUSE" Description="不安全的随机数：使用不可靠的随机函数所产生的随机行为或数据不能达到应有的效果" Rank="普通" />
+	</Method>
+	<Method name="drand48" libPos="stdlib.h" signature="double drand48(void);">
+		<Feature type="API_ABUSE" Description="不安全的随机数：使用不可靠的随机函数所产生的随机行为或数据不能达到应有的效果" Rank="普通" />
+	</Method>
+	<Method name="abort" libPos="stdlib.h" signature="void abort ( void );">
+		<Feature type="API_ABUSE" 
+		Description="不恰当的进程终止：abort()函数通过发出一个SIGABRT信号终止程序的执行不会清空缓冲区，也没有调用之前用atexit()函数注册的清理函数."
+		Rank="普通" />
+	</Method>	
+	<Method name="_exit" libPos="stdlib.h" signature="void _exit(int status);">
+		<Feature type="API_ABUSE" Description="不恰当的进程终止：_exit()函数不会处理标准I/O缓冲区。" Rank="普通" />
+	</Method>
+	<Method name="crypt" libPos="unistd.h" signature="char *crypt(const char *key, const char *salt);">
+		<Feature type="API_ABUSE" Description="弱加密函数：产生弱密码不能保护系统" Rank="普通" />
+	</Method>
+	<Method name="remove" libPos="stdio.h" signature="int remove ( const char * filename );">
+		<Feature type="API_ABUSE" Description="不安全的删除文件：用不安全的方法删除文件可导致该可能包含敏感信息的文件可以被恢复" Rank="普通" />
+	</Method>	
+	<Method name="getpw" libPos="sys/types.h" signature="int getpw(int uid, char *buf);">
+		<Feature type="API_ABUSE" Description="过时的方法：使用不推荐使用的或过时的函数可能表明存在忽略的代码。" Rank="普通" />
+	</Method>	
+		<Method name="putenv" libPos="stdlib.h" signature="int putenv(char *envvar);">
+		<Feature type="API_ABUSE" Description="不一致的实现：putenv方法在不同的平台有不一致的实现，在不同的平台上会不同的行为，不具有可移植性。" Rank="普通" />
+	</Method>	
+	<Method name="getlogin" libPos="unistd.h" signature="char *getlogin(void);">
+		<Feature type="API_ABUSE" Description="不可靠的身份认证：易受欺骗攻击" Rank="普通" />
+	</Method>
+	<Method name="execlp" libPos="process.h" signature="int execlp( const char *cmdname, ...);">
+		<Feature type="API_ABUSE" Description="不可靠的进程创建：一些系统创建进程的调用会允许恶意代码的执行"
+		Rank="普通" />
+	</Method>	
+	<Method name="system" libPos="stdlib.h" signature="int system( char *command );">
+		<Feature type="API_ABUSE" Description="不可靠的进程创建：一些系统创建进程的调用会允许恶意代码的执行"
+		Rank="普通" />
+	</Method>	
+	<Method name="execl" libPos="unistd.h" signature="int execl(const char * path, const char * arg, ...);">
+		<Feature type="API_ABUSE" Description="不可靠的进程创建：一些系统创建进程的调用会允许恶意代码的执行"
+		Rank="普通" />
+	</Method>	
+	<Method name="execvp" libPos="unistd.h" signature="int execvp(const char *file, char * const argv []);">
+		<Feature type="API_ABUSE" Description="不可靠的进程创建：一些系统创建进程的调用会允许恶意代码的执行"
+		Rank="普通" />
+	</Method>
+	<Method name="execvpe" libPos="unistd.h" signature="int execvpe(char *path,char *argv[],char **env);">
+		<Feature type="API_ABUSE" Description="不可靠的进程创建：一些系统创建进程的调用会允许恶意代码的执行"
+		Rank="普通" />
+	</Method>
+	<Method name="execv" libPos="unistd.h" signature="int execv (const char * path, char * const argv[]);">
+		<Feature type="API_ABUSE" Description="不可靠的进程创建：一些系统创建进程的调用会允许恶意代码的执行"
+		Rank="普通" />
+	</Method>
+	<Method name="execve" libPos="unistd.h" signature="int execve(const char * filename, char * const argv[], char * const envp[]);">
+		<Feature type="API_ABUSE" Description="不可靠的进程创建：一些系统创建进程的调用会允许恶意代码的执行"
+		Rank="普通" />
+	</Method>
+	<Method name="bzero" libPos="string.h" signature="void bzero(void *s,int n);">
+		<Feature type="API_ABUSE" Description="不安全的API调用，bzero()会有潜在的安全性问题，建议使用memset()函数取代。"
+		Rank="普通" />
+	</Method>
+	<Method name="bcmp" libPos="string.h" signature="int bcmp (const void *s1,const void *s2,int n);">
+		<Feature type="API_ABUSE" Description="过时的方法：bcmp()为不推荐使用的过时函数，建议使用memcmp()函数取代。"
+		Rank="普通" />
+	</Method>
+	<Method name="bcopy" libPos="string.h" signature="extern void bcopy(const void *src, void *dest, int n);">
+		<Feature type="API_ABUSE" Description="过时的方法：bcopy()为不推荐使用的过时函数，建议使用memcpy()函数取代。"
+		Rank="普通" />
+	</Method>
+</APIABUSE_Summary>

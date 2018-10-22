@@ -1,0 +1,1910 @@
+DTS测试用例开发规范
+================================================================================
+1. 过程内简单变量
+--------------------------------------------------------------------------------
+1.1 在顺序路径上出现问题
+#include <stdlib.h>
+int foo_1_1(char *f) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	*f = 'a';
+	return 0;
+}
+#include <stdlib.h>
+int foo_1_1(char *f) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	*f = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+1.2 在简单条件路径上出现问题
+#include <stdlib.h>
+int foo_1_2(char *f) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	if (f)
+		*f = 'a';
+	return 0;
+}
+#include <stdlib.h>
+int foo_1_2(char *f) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	if (f)
+		*f = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+1.3 在复合条件路径上出现问题
+#include <stdlib.h>
+int foo_1_3(int i, char *f) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	if (i || f)
+		*f = 'a';
+	return 0;
+}
+#include <stdlib.h>
+int foo_1_3(int i, char *f) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	if (i || f)
+		*f = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+1.4 在组合条件路径上出现问题
+#include <stdlib.h>
+int foo_1_4(int i, int j) {
+	char *f = (char*)malloc(sizeof(char));
+	if (i)
+		free(f);
+	if(j)
+		*f = 1;
+	return 0;
+}
+#include <stdlib.h>
+int foo_1_4(int i, int j) {
+	char *f = (char*)malloc(sizeof(char));
+	if (i)
+		free(f);
+	if(j)
+		*f = 1;
+	return 0;
+}
+--------------------------------------------------------------------------------
+1.5 在简单条件判断后出现问题
+#include <stdlib.h>
+int foo_1_5(char *f) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	if (f) {
+		/* do something */
+	}
+	*f = 'a';
+	return 0;
+}
+#include <stdlib.h>
+int foo_1_5(char *f) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	if (f) {
+		/* do something */
+	}
+	*f = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+1.6 在复合条件判断后出现问题
+#include <stdlib.h>
+int foo_1_6(char *f, int i) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	if (i || f) {
+		/* do something */
+	}
+	*f = 'a';
+	return 0;
+}
+#include <stdlib.h>
+int foo_1_6(char *f, int i) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	if (i || f) {
+		/* do something */
+	}
+	*f = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+1.7 在简单条件判断前出现问题
+#include <stdlib.h>
+int foo_1_7(char *f, int i) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	*f = 'a';
+	if (!f) {
+		/* do something */
+	}
+	return 0;
+}
+#include <stdlib.h>
+int foo_1_7(char *f, int i) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	*f = 'a';
+	if (!f) {
+		/* do something */
+	}
+	return 0;
+}
+--------------------------------------------------------------------------------
+1.8 在复合条件判断前出现问题
+#include <stdlib.h>
+int foo_1_8(char* f, int i) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	*f = 'a';
+	if (i || f) {
+		/* do something */
+	}
+	return 0;
+}
+#include <stdlib.h>
+int foo_1_8(char* f, int i) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	*f = 'a';
+	if (i || f) {
+		/* do something */
+	}
+	return 0;
+}
+--------------------------------------------------------------------------------
+1.9 在单级函数副作用后出现问题
+#include <stdlib.h>
+char *f;
+void myfree_1_9() {
+	free(f);
+}
+int foo_1_9() {
+	f = (char*)malloc(sizeof(char));
+	myfree_1_9();
+	*f = 'a';
+	return 0;
+}
+#include <stdlib.h>
+char *f;
+void myfree_1_9() {
+	free(f);
+}
+int foo_1_9() {
+	f = (char*)malloc(sizeof(char));
+	myfree_1_9();
+	*f = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+1.10 在多级函数副作用后出现问题
+#include <stdlib.h>
+char *f;
+void myfree_1_10() {
+	free(f);
+}
+void bar_1_10() {
+	myfree_1_10();
+}
+int foo_1_10() {
+	f = (char*)malloc(sizeof(char));
+	//myfree_1_10(f);
+	foo_1_10();
+	*f = 'a';
+	return 0;
+}
+#include <stdlib.h>
+char *f;
+void myfree_1_10() {
+	free(f);
+}
+void bar_1_10() {
+	myfree_1_10();
+}
+int foo_1_10() {
+	f = (char*)malloc(sizeof(char));
+	//myfree_1_10(f);
+	foo_1_10();
+	*f = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+1.11 在简单条件上出现问题
+#include <stdlib.h>
+int foo_1_11(char *f) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	if (*f) {
+		// do something
+	}
+	return 0;
+}
+#include <stdlib.h>
+int foo_1_11(char *f) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	if (*f) {
+		// do something
+	}
+	return 0;
+}
+--------------------------------------------------------------------------------
+1.12 在复合条件上出现问题
+#include <stdlib.h>
+int foo_1_12(char *f, int i) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	if (i && *f != 'a') {
+		// do something
+	}
+	return 0;
+}
+#include <stdlib.h>
+int foo_1_12(char *f, int i) {
+	f = (char*)malloc(sizeof(char));
+	free(f);
+	if (i && *f != 'a') {
+		// do something
+	}
+	return 0;
+}
+================================================================================
+2. 过程内结构体成员变量
+--------------------------------------------------------------------------------
+2.1 在顺序路径上出现问题
+#include <stdlib.h>
+struct A_2_1 {
+	char *f;
+};
+int foo_2_1() {
+	struct A_2_1 a;
+	a.f = (char*)malloc(sizeof(char));
+	free(a.f);
+	*(a.f) = 1;
+	return 0;
+}
+#include <stdlib.h>
+struct A_2_1 {
+	char *f;
+};
+int foo_2_1() {
+	struct A_2_1 a;
+	a.f = (char*)malloc(sizeof(char));
+	free(a.f);
+	*(a.f) = 1;
+	return 0;
+}
+--------------------------------------------------------------------------------
+2.2 在简单条件路径上出现问题
+#include <stdlib.h>
+struct A_2_2 {
+	char *f;
+};
+int foo_2_2() {
+	struct A_2_2 a;
+	a.f = (char*)malloc(sizeof(char));
+	free(a.f);
+	if (a.f)
+		*(a.f) = 'a';
+	return 0;
+}
+#include <stdlib.h>
+struct A_2_2 {
+	char *f;
+};
+int foo_2_2() {
+	struct A_2_2 a;
+	a.f = (char*)malloc(sizeof(char));
+	free(a.f);
+	if (a.f)
+		*(a.f) = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+2.3 在复合条件路径上出现问题
+#include <stdlib.h>
+struct A_2_3 {
+	char *f;
+};
+int foo_2_3(int i) {
+	struct A_2_3 a;
+	a.f = (char*)malloc(sizeof(char));
+	free(a.f);
+	if (a.f || i)
+		*(a.f) = 'a';
+	return 0;
+}
+#include <stdlib.h>
+struct A_2_3 {
+	char *f;
+};
+int foo_2_3(int i) {
+	struct A_2_3 a;
+	a.f = (char*)malloc(sizeof(char));
+	free(a.f);
+	if (a.f || i)
+		*(a.f) = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+2.4 在组合条件路径上出现问题
+#include <stdlib.h>
+struct A_2_4 {
+	char *f;
+};
+int foo_2_4(int i, int j) {
+	struct A_2_4 a;
+	a.f = (char*)malloc(sizeof(char));
+	if (i)
+		free(a.f);
+	if (j)
+		*(a.f) = 'a';
+	return 0;
+}
+#include <stdlib.h>
+struct A_2_4 {
+	char *f;
+};
+int foo_2_4(int i, int j) {
+	struct A_2_4 a;
+	a.f = (char*)malloc(sizeof(char));
+	if (i)
+		free(a.f);
+	if (j)
+		*(a.f) = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+2.5 在简单条件判断后出现问题
+#include <stdlib.h>
+struct A_2_5 {
+	char *f;
+};
+int foo_2_5(int i, int j) {
+	struct A_2_5 a;
+	a.f = (char*)malloc(sizeof(char));
+	free(a.f);
+	if (a.f) {}
+	*(a.f) = 'a';
+	return 0;
+}
+#include <stdlib.h>
+struct A_2_5 {
+	char *f;
+};
+int foo_2_5(int i, int j) {
+	struct A_2_5 a;
+	a.f = (char*)malloc(sizeof(char));
+	free(a.f);
+	if (a.f) {}
+	*(a.f) = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+2.6 在复合条件判断后出现问题
+#include <stdlib.h>
+struct A_2_6 {
+	char *f;
+};
+int foo_2_6(int i, int j) {
+	struct A_2_6 a;
+	a.f = (char*)malloc(sizeof(char));
+	free(a.f);
+	if (i || a.f);
+	*(a.f) = 'a';
+	return 0;
+}
+#include <stdlib.h>
+struct A_2_6 {
+	char *f;
+};
+int foo_2_6(int i, int j) {
+	struct A_2_6 a;
+	a.f = (char*)malloc(sizeof(char));
+	free(a.f);
+	if (i || a.f);
+	*(a.f) = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+2.7 在简单条件判断前出现问题
+#include <stdlib.h>
+struct A_2_7 {
+	char *f;
+};
+int foo_2_7(int i, int j) {
+	struct A_2_7 a;
+	a.f = (char*)malloc(sizeof(char));
+	free(a.f);
+	*(a.f) = 'a';
+	if (a.f) {}
+	return 0;
+}
+#include <stdlib.h>
+struct A_2_7 {
+	char *f;
+};
+int foo_2_7(int i, int j) {
+	struct A_2_7 a;
+	a.f = (char*)malloc(sizeof(char));
+	free(a.f);
+	*(a.f) = 'a';
+	if (a.f) {}
+	return 0;
+}
+--------------------------------------------------------------------------------
+2.8 在复合条件判断前出现问题
+#include <stdlib.h>
+struct A_2_8 {
+	char *f;
+};
+int foo_2_8(int i, int j) {
+	struct A_2_8 a;
+	a.f = (char*)malloc(sizeof(char));
+	free(a.f);
+	*(a.f) = 'a';
+	if (i || a.f) {}
+	return 0;
+}
+#include <stdlib.h>
+struct A_2_8 {
+	char *f;
+};
+int foo_2_8(int i, int j) {
+	struct A_2_8 a;
+	a.f = (char*)malloc(sizeof(char));
+	free(a.f);
+	*(a.f) = 'a';
+	if (i || a.f) {}
+	return 0;
+}
+--------------------------------------------------------------------------------
+2.9 在单级函数副作用后出现问题
+#include <stdlib.h>
+void myfree_2_9(char *f) {
+	free(f);
+}
+struct A_2_9 {
+	char *f;
+};
+int foo_2_9() {
+	struct A_2_9 a;
+	a.f = (char*)malloc(sizeof(char));
+	myfree_2_9(a.f);
+	*a.f = 'a';
+	return 0;
+}
+#include <stdlib.h>
+void myfree_2_9(char *f) {
+	free(f);
+}
+struct A_2_9 {
+	char *f;
+};
+int foo_2_9() {
+	struct A_2_9 a;
+	a.f = (char*)malloc(sizeof(char));
+	myfree_2_9(a.f);
+	*a.f = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+2.10 在多级函数副作用后出现问题
+#include <stdlib.h>
+void myfree_2_10(char *f) {
+	free(f);
+}
+void foo_2_10(char *p) {
+	myfree_2_10(p);
+}
+struct A_2_10 {
+	char *f;
+};
+int foo_2_10() {
+	struct A_2_10 a;
+	a.f = (char*)malloc(sizeof(char));
+	//myfree_2_10(f);
+	foo_2_10(a.f);
+	*a.f = 'a';
+	return 0;
+}
+#include <stdlib.h>
+void myfree_2_10(char *f) {
+	free(f);
+}
+void foo_2_10(char *p) {
+	myfree_2_10(p);
+}
+struct A_2_10 {
+	char *f;
+};
+int foo_2_10() {
+	struct A_2_10 a;
+	a.f = (char*)malloc(sizeof(char));
+	//myfree_2_10(f);
+	foo_2_10(a.f);
+	*a.f = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+2.11 在简单条件上出现问题
+#include <stdlib.h>
+struct A_2_11 {
+	char *p;
+};
+int foo_2_11() {
+	struct A_2_11 a;
+	a.p = (char*)malloc(sizeof(char));
+	free(a.p);
+	if (*a.p =='a') {
+		// do something
+	}
+	return 0;
+}
+#include <stdlib.h>
+struct A_2_11 {
+	char *p;
+};
+int foo_2_11() {
+	struct A_2_11 a;
+	a.p = (char*)malloc(sizeof(char));
+	free(a.p);
+	if (*a.p =='a') {
+		// do something
+	}
+	return 0;
+}
+--------------------------------------------------------------------------------
+2.12 在复合条件上出现问题
+#include <stdlib.h>
+struct A_2_12 {
+	char *p;
+};
+int foo_2_12(int i) {
+	struct A_2_12 a;
+	a.p = (char*)malloc(sizeof(char));
+	free(a.p);
+	if (i || *a.p =='a') {
+		// do something
+	}
+	return 0;
+}
+#include <stdlib.h>
+struct A_2_12 {
+	char *p;
+};
+int foo_2_12(int i) {
+	struct A_2_12 a;
+	a.p = (char*)malloc(sizeof(char));
+	free(a.p);
+	if (i || *a.p =='a') {
+		// do something
+	}
+	return 0;
+}
+================================================================================
+3. 过程内类成员变量
+--------------------------------------------------------------------------------
+3.1 在顺序路径上出现问题
+class A_3_1 {
+public:
+	char *f;
+};
+int foo_3_1() {
+	A_3_1 a;
+	a.f = new char;
+	delete a.f;
+	*(a.f) = 1;
+	return 0;
+}
+class A_3_1 {
+public:
+	char *f;
+};
+int foo_3_1() {
+	A_3_1 a;
+	a.f = new char;
+	delete a.f;
+	*(a.f) = 1;
+	return 0;
+}
+--------------------------------------------------------------------------------
+3.2 在简单条件路径上出现问题
+class A_3_2 {
+public:
+	char *f;
+};
+int foo_3_2() {
+	A_3_2 a;
+	a.f = new char;
+	delete a.f;
+	if (a.f)
+		*a.f = 'a';
+	return 0;
+}
+class A_3_2 {
+public:
+	char *f;
+};
+int foo_3_2() {
+	A_3_2 a;
+	a.f = new char;
+	delete a.f;
+	if (a.f)
+		*a.f = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+3.3 在复合条件路径上出现问题
+class A_3_3 {
+public:
+	char *f;
+};
+int foo_3_3(int i) {
+	A_3_3 a;
+	a.f = new char;
+	delete a.f;
+	if (a.f || i)
+		*a.f = 'a';
+	return 0;
+}
+class A_3_3 {
+public:
+	char *f;
+};
+int foo_3_3(int i) {
+	A_3_3 a;
+	a.f = new char;
+	delete a.f;
+	if (a.f || i)
+		*a.f = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+3.4 在组合条件路径上出现问题
+class A_3_4 {
+public:
+	char *f;
+};
+int foo_3_4(int i, int j) {
+	A_3_4 a;
+	a.f = new char;
+	if (i)
+		delete a.f;
+	if (j)
+		*a.f = 'a';
+	return 0;
+}
+class A_3_4 {
+public:
+	char *f;
+};
+int foo_3_4(int i, int j) {
+	A_3_4 a;
+	a.f = new char;
+	if (i)
+		delete a.f;
+	if (j)
+		*a.f = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+3.5 在简单条件判断后出现问题
+class A_3_5 {
+public:
+	char *f;
+};
+int foo_3_5(int i, int j) {
+	A_3_5 a;
+	a.f = new char;
+	delete a.f;
+	if (a.f);
+	*a.f = 'a';
+	return 0;
+}
+class A_3_5 {
+public:
+	char *f;
+};
+int foo_3_5(int i, int j) {
+	A_3_5 a;
+	a.f = new char;
+	delete a.f;
+	if (a.f);
+	*a.f = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+3.6 在复合条件判断后出现问题
+class A_3_6 {
+public:
+	char *f;
+};
+int foo_3_6(int i, int j) {
+	A_3_6 a;
+	a.f = new char;
+	if (a.f || j);
+	*a.f = 'a';
+	return 0;
+}
+class A_3_6 {
+public:
+	char *f;
+};
+int foo_3_6(int i, int j) {
+	A_3_6 a;
+	a.f = new char;
+	if (a.f || j);
+	*a.f = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+3.7 在简单条件判断前出现问题
+class A_3_7 {
+public:
+	char *f;
+};
+int foo_3_7(int i, int j) {
+	A_3_7 a;
+	a.f = new char;
+
+	delete a.f;
+
+	*a.f = 'a';
+	if (a.f);
+	return 0;
+}
+class A_3_7 {
+public:
+	char *f;
+};
+int foo_3_7(int i, int j) {
+	A_3_7 a;
+	a.f = new char;
+
+	delete a.f;
+
+	*a.f = 'a';
+	if (a.f);
+	return 0;
+}
+--------------------------------------------------------------------------------
+3.8 在复合条件判断前出现问题
+class A_3_8 {
+public:
+	char *f;
+};
+int foo_3_8(int i, int j) {
+	A_3_8 a;
+	a.f = new char;
+
+	delete a.f;
+
+	*a.f = 'a';
+	if (i || a.f);
+	return 0;
+}
+class A_3_8 {
+public:
+	char *f;
+};
+int foo_3_8(int i, int j) {
+	A_3_8 a;
+	a.f = new char;
+
+	delete a.f;
+
+	*a.f = 'a';
+	if (i || a.f);
+	return 0;
+}
+--------------------------------------------------------------------------------
+3.9 在单级函数副作用后出现问题
+void myfree_3_9(char *f) {
+	delete f;
+}
+class A_3_9 {
+public:
+	char *f;
+};
+int foo_3_9() {
+	A_3_9 a;
+	a.f = new char;
+	myfree_3_9(a.f);
+	*a.f = 1;
+	return 0;
+}
+void myfree_3_9(char *f) {
+	delete f;
+}
+class A_3_9 {
+public:
+	char *f;
+};
+int foo_3_9() {
+	A_3_9 a;
+	a.f = new char;
+	myfree_3_9(a.f);
+	*a.f = 1;
+	return 0;
+}
+--------------------------------------------------------------------------------
+3.10 在多级函数副作用后出现问题
+void myfree_3_10(char *f) {
+	delete f;
+}
+class A_3_10 {
+public:
+	char *f;
+};
+void foo_3_10(char *p) {
+	myfree_3_10(p);
+}
+int bar_3_10() {
+	A_3_10 a;
+	a.f = new char;
+	//myfree_3_10(f);
+	foo_3_10(a.f);
+	*a.f = 1;
+	return 0;
+}
+void myfree_3_10(char *f) {
+	delete f;
+}
+class A_3_10 {
+public:
+	char *f;
+};
+void foo_3_10(char *p) {
+	myfree_3_10(p);
+}
+int bar_3_10() {
+	A_3_10 a;
+	a.f = new char;
+	//myfree_3_10(f);
+	foo_3_10(a.f);
+	*a.f = 1;
+	return 0;
+}
+--------------------------------------------------------------------------------
+3.11 在简单条件上出现问题
+class A_3_11 {
+public:
+	char *p;
+};
+int foo_3_11() {
+	A_3_11 a;
+	a.p = new char;
+	delete a.p;
+	if (*a.p =='a') {
+		// do something
+	}
+	return 0;
+}
+class A_3_11 {
+public:
+	char *p;
+};
+int foo_3_11() {
+	A_3_11 a;
+	a.p = new char;
+	delete a.p;
+	if (*a.p =='a') {
+		// do something
+	}
+	return 0;
+}
+--------------------------------------------------------------------------------
+3.12 在复合条件上出现问题
+class A_3_12 {
+public:
+	char *p;
+};
+int foo_3_12(int i) {
+	A_3_12 a;
+	a.p = new char;
+	delete a.p;
+	if (*a.p =='a' || i) {
+		// do something
+	}
+	return 0;
+}
+class A_3_12 {
+public:
+	char *p;
+};
+int foo_3_12(int i) {
+	A_3_12 a;
+	a.p = new char;
+	delete a.p;
+	if (*a.p =='a' || i) {
+		// do something
+	}
+	return 0;
+}
+================================================================================
+4. 过程内数组成员变量
+--------------------------------------------------------------------------------
+4.1 在顺序路径上出现问题
+#include <stdlib.h>
+int foo_4_1() {
+	char *f[10];
+	f[0] = (char*)malloc(sizeof(char));
+	free(f[0]);
+	*(f[0]) = 1;
+	return 0;
+}
+#include <stdlib.h>
+int foo_4_1() {
+	char *f[10];
+	f[0] = (char*)malloc(sizeof(char));
+	free(f[0]);
+	*(f[0]) = 1;
+	return 0;
+}
+--------------------------------------------------------------------------------
+4.2 在简单条件路径上出现问题
+#include <stdlib.h>
+int foo_4_2() {
+	char *f[10];
+	f[0] = (char*)malloc(sizeof(char));
+	free(f[0]);
+	if (f[0])
+		*(f[0]) = 'a';
+	return 0;
+}
+#include <stdlib.h>
+int foo_4_2() {
+	char *f[10];
+	f[0] = (char*)malloc(sizeof(char));
+	free(f[0]);
+	if (f[0])
+		*(f[0]) = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+4.3 在复合条件路径上出现问题
+#include <stdlib.h>
+int foo_4_3(int i) {
+	char *f[10];
+	f[0] = (char*)malloc(sizeof(char));
+	free(f[0]);
+	if (i || f[0])
+		*(f[0]) = 1;
+	return 0;
+}
+#include <stdlib.h>
+int foo_4_3(int i) {
+	char *f[10];
+	f[0] = (char*)malloc(sizeof(char));
+	free(f[0]);
+	if (i || f[0])
+		*(f[0]) = 1;
+	return 0;
+}
+--------------------------------------------------------------------------------
+4.4 在组合条件路径上出现问题
+#include <stdlib.h>
+int foo_4_4(int i, int j) {
+	char *f[10];
+	f[0] = (char*)malloc(sizeof(char));
+	if (i)
+		free(f[0]);
+	if (j)
+		*(f[0]) = 'a';
+	return 0;
+}
+#include <stdlib.h>
+int foo_4_4(int i, int j) {
+	char *f[10];
+	f[0] = (char*)malloc(sizeof(char));
+	if (i)
+		free(f[0]);
+	if (j)
+		*(f[0]) = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+4.5 在简单条件判断后出现问题
+#include <stdlib.h>
+int foo_4_5() {
+	char *f[10];
+	f[0] = (char*)malloc(sizeof(char));
+	free(f[0]);
+	if (f[0]) {
+		/* do something */
+	}
+	*(f[0]) = 1;
+	return 0;
+}
+#include <stdlib.h>
+int foo_4_5() {
+	char *f[10];
+	f[0] = (char*)malloc(sizeof(char));
+	free(f[0]);
+	if (f[0]) {
+		/* do something */
+	}
+	*(f[0]) = 1;
+	return 0;
+}
+--------------------------------------------------------------------------------
+4.6 在复合条件判断后出现问题
+#include <stdlib.h>
+int foo_4_6(int i) {
+	char *f[10];
+	f[0] = (char*)malloc(sizeof(char));
+	free(f[0]);
+	if (f[0] || i) {
+		/* do something */
+	}
+	*f[0] = 1;
+	return 0;
+}
+#include <stdlib.h>
+int foo_4_6(int i) {
+	char *f[10];
+	f[0] = (char*)malloc(sizeof(char));
+	free(f[0]);
+	if (f[0] || i) {
+		/* do something */
+	}
+	*f[0] = 1;
+	return 0;
+}
+--------------------------------------------------------------------------------
+4.7 在简单条件判断前出现问题
+#include <stdlib.h>
+int foo_4_7() {
+	char *f[10];
+	f[0] = (char*)malloc(sizeof(char));
+	free(f[0]);
+	*f[0] = 1;
+	if (f[0]) {
+		/* do something */
+	}
+	return 0;
+}
+#include <stdlib.h>
+int foo_4_7() {
+	char *f[10];
+	f[0] = (char*)malloc(sizeof(char));
+	free(f[0]);
+	*f[0] = 1;
+	if (f[0]) {
+		/* do something */
+	}
+	return 0;
+}
+--------------------------------------------------------------------------------
+4.8 在复合条件判断前出现问题
+#include <stdlib.h>
+int foo_4_8(int i) {
+	char *f[10];
+	f[0] = (char*)malloc(sizeof(char));
+	free(f[0]);
+	*f[0] = 1;
+	if (i || f[0]) {
+		/* do something */
+	}
+	return 0;
+}
+#include <stdlib.h>
+int foo_4_8(int i) {
+	char *f[10];
+	f[0] = (char*)malloc(sizeof(char));
+	free(f[0]);
+	*f[0] = 1;
+	if (i || f[0]) {
+		/* do something */
+	}
+	return 0;
+}
+--------------------------------------------------------------------------------
+4.9 在单级函数副作用后出现问题
+#include <stdlib.h>
+char *f[10];
+void myfree_4_9() {
+	free(f[0]);
+}
+int foo_4_9() {
+	f[0] = (char*)malloc(sizeof(char));
+	myfree_4_9();
+	*(f[0]) = 1;
+	return 0;
+}
+#include <stdlib.h>
+char *f[10];
+void myfree_4_9() {
+	free(f[0]);
+}
+int foo_4_9() {
+	f[0] = (char*)malloc(sizeof(char));
+	myfree_4_9();
+	*(f[0]) = 1;
+	return 0;
+}
+--------------------------------------------------------------------------------
+4.10 在多级函数副作用后出现问题
+#include <stdlib.h>
+char *f[10];
+void myfree_4_10() {
+	free(f[0]);
+}
+void foo_4_10() {
+	myfree_4_10();
+}
+int bar_4_10() {
+
+	f[0] = (char*)malloc(sizeof(char));
+	//myfree_4_10(f);
+	foo_4_10();
+	* f[0] = 1;
+	return 0;
+}
+#include <stdlib.h>
+char *f[10];
+void myfree_4_10() {
+	free(f[0]);
+}
+void foo_4_10() {
+	myfree_4_10();
+}
+int bar_4_10() {
+
+	f[0] = (char*)malloc(sizeof(char));
+	//myfree_4_10(f);
+	foo_4_10();
+	* f[0] = 1;
+	return 0;
+}
+--------------------------------------------------------------------------------
+4.11 在简单条件上出现问题
+#include <stdlib.h>
+int foo_4_11() {
+	char *p[10] = {0};
+	p[0] = (char*)malloc(sizeof(char));
+	free(p[0]);
+	if (*p[0] != 'a') {
+		// do something
+	}
+	return 0;
+}
+#include <stdlib.h>
+int foo_4_11() {
+	char *p[10] = {0};
+	p[0] = (char*)malloc(sizeof(char));
+	free(p[0]);
+	if (*p[0] != 'a') {
+		// do something
+	}
+	return 0;
+}
+--------------------------------------------------------------------------------
+4.12 在复合条件上出现问题
+#include <stdlib.h>
+int foo_4_12(int i) {
+	char *p[10] = {0};
+	p[0] = (char*)malloc(sizeof(char));
+	free(p[0]);
+	if (i || *p[0] != 'a') {
+		// do something
+	}
+	return 0;
+}
+#include <stdlib.h>
+int foo_4_12(int i) {
+	char *p[10] = {0};
+	p[0] = (char*)malloc(sizeof(char));
+	free(p[0]);
+	if (i || *p[0] != 'a') {
+		// do something
+	}
+	return 0;
+}
+================================================================================
+5. 过程内临时变量
+--------------------------------------------------------------------------------
+5.1 在顺序路径上出现问题
+#include <stdlib.h>
+char *foo_5_1(char *p) {
+	free(p);
+	return p;
+}
+int bar_5_1() {
+	char *p = (char *)malloc(sizeof(char));
+	*foo_5_1(p) = 'a';
+	return 0;
+}
+#include <stdlib.h>
+char *foo_5_1(char *p) {
+	free(p);
+	return p;
+}
+int bar_5_1() {
+	char *p = (char *)malloc(sizeof(char));
+	*foo_5_1(p) = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+5.2 在简单条件路径上出现问题
+#include <stdlib.h>
+char *foo_5_2() {
+	char *p = (char *)malloc(sizeof(char));
+	free(p);
+	return p;
+}
+int bar_5_2() {
+	if (foo_5_2())
+		*foo_5_2() = 'a';
+	return 0;
+}
+#include <stdlib.h>
+char *foo_5_2() {
+	char *p = (char *)malloc(sizeof(char));
+	free(p);
+	return p;
+}
+int bar_5_2() {
+	if (foo_5_2())
+		*foo_5_2() = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+5.3 在复合条件路径上出现问题
+#include <stdlib.h>
+char *foo_5_3() {
+	char *p = (char *)malloc(sizeof(char));
+	free(p);
+	return p;
+}
+int bar_5_3(int i) {
+	if (i == 1 || foo_5_3())
+		*foo_5_3() = 'a';
+	return 0;
+}
+#include <stdlib.h>
+char *foo_5_3() {
+	char *p = (char *)malloc(sizeof(char));
+	free(p);
+	return p;
+}
+int bar_5_3(int i) {
+	if (i == 1 || foo_5_3())
+		*foo_5_3() = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+5.4 在组合条件路径上出现问题
+#include <stdlib.h>
+char *foo_5_4() {
+	char *p = (char *)malloc(sizeof(char));
+	free(p);
+	return p;
+}
+int bar_5_4(int i) {
+	if (i == 1)
+		foo_5_4();
+	if (i == 2)
+		*foo_5_4() = 'a';
+	return 0;
+}
+#include <stdlib.h>
+char *foo_5_4() {
+	char *p = (char *)malloc(sizeof(char));
+	free(p);
+	return p;
+}
+int bar_5_4(int i) {
+	if (i == 1)
+		foo_5_4();
+	if (i == 2)
+		*foo_5_4() = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+5.5 在简单条件判断后出现问题
+#include <stdlib.h>
+char *foo_5_5(char *p) {
+	free(p);
+	return p;
+}
+int bar_5_5(int i) {
+	char *p = (char *)malloc(sizeof(char));
+	if (i == 1);
+	*foo_5_5(p) = 'a';
+	return 0;
+}
+#include <stdlib.h>
+char *foo_5_5(char *p) {
+	free(p);
+	return p;
+}
+int bar_5_5(int i) {
+	char *p = (char *)malloc(sizeof(char));
+	if (i == 1);
+	*foo_5_5(p) = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+5.6 在复合条件判断后出现问题
+#include <stdlib.h>
+char *foo_5_6() {
+	char *p = (char *)malloc(sizeof(char));
+	free(p);
+	return p;
+}
+int bar_5_6(int i) {
+
+	if (i == 1 || foo_5_6());
+	*foo_5_6() = 'a';
+	return 0;
+}
+#include <stdlib.h>
+char *foo_5_6() {
+	char *p = (char *)malloc(sizeof(char));
+	free(p);
+	return p;
+}
+int bar_5_6(int i) {
+
+	if (i == 1 || foo_5_6());
+	*foo_5_6() = 'a';
+	return 0;
+}
+--------------------------------------------------------------------------------
+5.7 在简单条件判断前出现问题
+#include <stdlib.h>
+char *foo_5_7(char *p) {
+	free(p);
+	return p;
+}
+int bar_5_7(int i) {
+	char *p = (char *)malloc(sizeof(char));
+
+	*foo_5_7(p) = 'a';
+	if (i);
+	return 0;
+}
+#include <stdlib.h>
+char *foo_5_7(char *p) {
+	free(p);
+	return p;
+}
+int bar_5_7(int i) {
+	char *p = (char *)malloc(sizeof(char));
+
+	*foo_5_7(p) = 'a';
+	if (i);
+	return 0;
+}
+--------------------------------------------------------------------------------
+5.8 在复合条件判断前出现问题
+#include <stdlib.h>
+char *foo_5_8() {
+	char *p = (char *)malloc(sizeof(char));
+	free(p);
+	return p;
+}
+int bar_5_8(int i) {
+
+	*foo_5_8() = 'a';
+	if (i == 1 || foo_5_8());
+	return 0;
+}
+#include <stdlib.h>
+char *foo_5_8() {
+	char *p = (char *)malloc(sizeof(char));
+	free(p);
+	return p;
+}
+int bar_5_8(int i) {
+
+	*foo_5_8() = 'a';
+	if (i == 1 || foo_5_8());
+	return 0;
+}
+--------------------------------------------------------------------------------
+5.9 在简单条件上出现问题
+#include <stdlib.h>
+char *foo_5_9(char *p) {
+	free(p);
+	return p;
+}
+int bar_5_9(int i) {
+	char *p = (char *)malloc(sizeof(char));
+	if (*foo_5_9(p) == 'a') {
+
+	}
+	return 0;
+}
+#include <stdlib.h>
+char *foo_5_9(char *p) {
+	free(p);
+	return p;
+}
+int bar_5_9(int i) {
+	char *p = (char *)malloc(sizeof(char));
+	if (*foo_5_9(p) == 'a') {
+
+	}
+	return 0;
+}
+--------------------------------------------------------------------------------
+5.10 在复合条件上出现问题
+#include <stdlib.h>
+char *foo_5_10(char *p) {
+	free(p);
+	return p;
+}
+int bar_5_10(int i) {
+	char *p = (char *)malloc(sizeof(char));
+	if (i || *foo_5_10(p) == 'a') {}
+	return 0;
+}
+#include <stdlib.h>
+char *foo_5_10(char *p) {
+	free(p);
+	return p;
+}
+int bar_5_10(int i) {
+	char *p = (char *)malloc(sizeof(char));
+	if (i || *foo_5_10(p) == 'a') {}
+	return 0;
+}
+================================================================================
+6. 过程间单级约束
+--------------------------------------------------------------------------------
+6.1 约束参数变量
+#include <stdlib.h>
+void foo_6_1(char *p) {
+	*p = 'a';
+}
+int ff_6_1() {
+	char *p = (char *)malloc(sizeof(char));
+	free(p);
+	foo_6_1(p);
+	return 0;
+}
+#include <stdlib.h>
+void foo_6_1(char *p) {
+	*p = 'a';
+}
+int ff_6_1() {
+	char *p = (char *)malloc(sizeof(char));
+	free(p);
+	foo_6_1(p);
+	return 0;
+}
+--------------------------------------------------------------------------------
+6.2 约束简单全局变量
+#include <stdlib.h>
+char *p;
+void foo_6_2() {
+	*p = 'a';
+}
+int ff_6_2() {
+	p = (char *)malloc(sizeof(char));
+	free(p);
+	foo_6_2();
+	return 0;
+}
+#include <stdlib.h>
+char *p;
+void foo_6_2() {
+	*p = 'a';
+}
+int ff_6_2() {
+	p = (char *)malloc(sizeof(char));
+	free(p);
+	foo_6_2();
+	return 0;
+}
+--------------------------------------------------------------------------------
+6.3 约束结构成员全局变量
+#include <stdlib.h>
+struct A_6_3 {
+	char *p;
+};
+struct A_6_3 a;
+void foo_6_3() {
+	*(a.p) = 'a';
+}
+int ff_6_3() {
+	a.p = (char *)malloc(sizeof(char));
+	free(a.p);
+	foo_6_3();
+	return 0;
+}
+#include <stdlib.h>
+struct A_6_3 {
+	char *p;
+};
+struct A_6_3 a;
+void foo_6_3() {
+	*(a.p) = 'a';
+}
+int ff_6_3() {
+	a.p = (char *)malloc(sizeof(char));
+	free(a.p);
+	foo_6_3();
+	return 0;
+}
+--------------------------------------------------------------------------------
+6.4 约束类成员全局变量
+class A_6_4 {
+public:
+	char *p;
+};
+A_6_4 a;
+void foo_6_4() {
+	*(a.p) = 'a';
+}
+int ff_6_4() {
+	a.p = new char;
+	delete a.p;
+	foo_6_4();
+	return 0;
+}
+class A_6_4 {
+public:
+	char *p;
+};
+A_6_4 a;
+void foo_6_4() {
+	*(a.p) = 'a';
+}
+int ff_6_4() {
+	a.p = new char;
+	delete a.p;
+	foo_6_4();
+	return 0;
+}
+--------------------------------------------------------------------------------
+6.5 约束数组成员全局变量
+#include <stdlib.h>
+char *p[10];
+void foo_6_5() {
+	*p[0] = 'a';
+}
+int bar_6_5() {
+	p[0] = (char *)malloc(sizeof(char));
+	free(p[0]);
+	foo_6_5();
+	return 0;
+}
+#include <stdlib.h>
+char *p[10];
+void foo_6_5() {
+	*p[0] = 'a';
+}
+int bar_6_5() {
+	p[0] = (char *)malloc(sizeof(char));
+	free(p[0]);
+	foo_6_5();
+	return 0;
+}
+================================================================================
+7. 过程间多级约束
+--------------------------------------------------------------------------------
+7.1 约束参数变量
+#include <stdlib.h>
+void foo_7_1(char *p) {
+	*p = 'a';
+}
+void bar_7_1(char *p) {
+	foo_7_1(p);
+}
+int baz_7_1() {
+	char *p = (char *)malloc(sizeof(char));
+	free(p);
+	//foo_7_1(p);
+	bar_7_1(p);
+	return 0;
+}
+#include <stdlib.h>
+void foo_7_1(char *p) {
+	*p = 'a';
+}
+void bar_7_1(char *p) {
+	foo_7_1(p);
+}
+int baz_7_1() {
+	char *p = (char *)malloc(sizeof(char));
+	free(p);
+	//foo_7_1(p);
+	bar_7_1(p);
+	return 0;
+}
+--------------------------------------------------------------------------------
+7.2 约束简单全局变量
+#include <stdlib.h>
+char *p;
+void foo_7_2() {
+	*p = 'a';
+}
+void bar_7_2() {
+	foo_7_2();
+}
+int baz_7_2() {
+	p = (char *)malloc(sizeof(char));
+	free(p);
+	bar_7_2();
+	//foo_7_2();
+	return 0;
+}
+#include <stdlib.h>
+char *p;
+void foo_7_2() {
+	*p = 'a';
+}
+void bar_7_2() {
+	foo_7_2();
+}
+int baz_7_2() {
+	p = (char *)malloc(sizeof(char));
+	free(p);
+	bar_7_2();
+	//foo_7_2();
+	return 0;
+}
+--------------------------------------------------------------------------------
+7.3 约束结构成员全局变量
+#include <stdlib.h>
+struct A_7_3 {
+	char *p;
+};
+struct A_7_3 a;
+void foo_7_3() {
+	*(a.p) = 'a';
+}
+void bar_7_3() {
+	foo_7_3();
+}
+int baz_7_3() {
+	a.p = (char *)malloc(sizeof(char));
+	free(a.p);
+	bar_7_3();
+	//foo_7_3();
+	return 0;
+}
+#include <stdlib.h>
+struct A_7_3 {
+	char *p;
+};
+struct A_7_3 a;
+void foo_7_3() {
+	*(a.p) = 'a';
+}
+void bar_7_3() {
+	foo_7_3();
+}
+int baz_7_3() {
+	a.p = (char *)malloc(sizeof(char));
+	free(a.p);
+	bar_7_3();
+	//foo_7_3();
+	return 0;
+}
+--------------------------------------------------------------------------------
+7.4 约束类成员全局变量
+class A_7_4 {
+public:
+	char *p;
+};
+A_7_4 a;
+void foo_7_4() {
+	*(a.p) = 'a';
+}
+void bar_7_4() {
+	foo_7_4();
+}
+int baz_7_4() {
+	a.p = new char;
+	delete a.p;
+	bar_7_4();
+	//foo_7_4();
+	return 0;
+}
+class A_7_4 {
+public:
+	char *p;
+};
+A_7_4 a;
+void foo_7_4() {
+	*(a.p) = 'a';
+}
+void bar_7_4() {
+	foo_7_4();
+}
+int baz_7_4() {
+	a.p = new char;
+	delete a.p;
+	bar_7_4();
+	//foo_7_4();
+	return 0;
+}
+--------------------------------------------------------------------------------
+7.5 约束数组成员全局变量
+#include <stdlib.h>
+char *p[10];
+void foo_7_5() {
+	*p[0] = 'a';
+}
+void bar_7_5() {
+	foo_7_5();
+}
+int baz_7_5() {
+	p[0] = (char *)malloc(sizeof(char));
+	free(p[0]);
+	bar_7_5();
+	//foo_7_5();
+	return 0;
+}
+#include <stdlib.h>
+char *p[10];
+void foo_7_5() {
+	*p[0] = 'a';
+}
+void bar_7_5() {
+	foo_7_5();
+}
+int baz_7_5() {
+	p[0] = (char *)malloc(sizeof(char));
+	free(p[0]);
+	bar_7_5();
+	//foo_7_5();
+	return 0;
+}
+================================================================================
+8. 过程间缺陷对象
+--------------------------------------------------------------------------------
+8.1 参数变量
+#include <stdlib.h>
+void foo_8_1(char p) {
+}
+void bar_8_1(char *p) {
+	p = (char *)malloc(sizeof(char));
+	free(p);
+	foo_8_1(*p);
+}
+#include <stdlib.h>
+void foo_8_1(char p) {
+}
+void bar_8_1(char *p) {
+	p = (char *)malloc(sizeof(char));
+	free(p);
+	foo_8_1(*p);
+}
+--------------------------------------------------------------------------------
+8.2 简单全局变量
+#include <stdlib.h>
+char *p;
+void foo_8_2(char p) {
+}
+void bar_8_2() {
+	p = (char *)malloc(sizeof(char));
+	free(p);
+	foo_8_2(*p);
+}
+#include <stdlib.h>
+char *p;
+void foo_8_2(char p) {
+}
+void bar_8_2() {
+	p = (char *)malloc(sizeof(char));
+	free(p);
+	foo_8_2(*p);
+}
+--------------------------------------------------------------------------------
+8.3 结构成员全局变量
+#include <stdlib.h>
+struct A_8_3 {
+	char *p;
+};
+struct A_8_3 a;
+void foo_8_3(char p) {
+}
+void bar_8_3() {
+	a.p = (char *)malloc(sizeof(char));
+	free(a.p);
+	foo_8_3(*a.p);
+}
+#include <stdlib.h>
+struct A_8_3 {
+	char *p;
+};
+struct A_8_3 a;
+void foo_8_3(char p) {
+}
+void bar_8_3() {
+	a.p = (char *)malloc(sizeof(char));
+	free(a.p);
+	foo_8_3(*a.p);
+}
+--------------------------------------------------------------------------------
+8.4 类成员全局变量
+class A_8_4 {
+public:
+	char *p;
+};
+A_8_4 a;
+void foo_8_4(char p) {
+}
+void bar_8_4() {
+	a.p = new char;
+	delete a.p;
+	foo_8_4(*a.p);
+}
+class A_8_4 {
+public:
+	char *p;
+};
+A_8_4 a;
+void foo_8_4(char p) {
+}
+void bar_8_4() {
+	a.p = new char;
+	delete a.p;
+	foo_8_4(*a.p);
+}
+--------------------------------------------------------------------------------
+8.5 数组成员全局变量
+#include <stdlib.h>
+char *p[10];
+void foo_8_5(char p) {
+}
+void bar_8_5() {
+	p[0] = (char *)malloc(sizeof(char));
+	free(p[0]);
+	foo_8_5(*p[0]);
+}
+#include <stdlib.h>
+char *p[10];
+void foo_8_5(char p) {
+}
+void bar_8_5() {
+	p[0] = (char *)malloc(sizeof(char));
+	free(p[0]);
+	foo_8_5(*p[0]);
+}
+--------------------------------------------------------------------------------
+8.6 库函数临时变量
+
+
+--------------------------------------------------------------------------------
+8.7 自定义函数临时变量
+#include <stdlib.h>
+char *bar_8_7(char *p) {
+	free(p);
+	return p;
+}
+void foo_8_7(char p) {
+}
+int baz_8_7() {
+	char *p = (char *)malloc(sizeof(char));
+	foo_8_7(*bar_8_7(p));
+	return 0;
+}
+#include <stdlib.h>
+char *bar_8_7(char *p) {
+	free(p);
+	return p;
+}
+void foo_8_7(char p) {
+}
+int baz_8_7() {
+	char *p = (char *)malloc(sizeof(char));
+	foo_8_7(*bar_8_7(p));
+	return 0;
+}
+================================================================================

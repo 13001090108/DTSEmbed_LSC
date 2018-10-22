@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TD-State-Machine Version="0.1" Language="c" Type="TD" isPathSensitive="false" isVariableRelated="true" Action ="createTDStateMachines" Class ="softtest.rules.gcc.safety.TDStateMachine" Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="fsm.xsd">
+	<State Name="Start" isStartState="true">
+		<Transition ToState="Inputed">
+			<Xpath Value=".//UnaryExpression/PostfixExpression[./PrimaryExpression[@Image='scanf' or @Image='read' or @Image='gets' or @Image='getenv' or @Image='fread' or @Image='fgets']]" 
+				Action="checkSameInput" Args = "java.util.List,softtest.fsm.c.FSMMachineInstance" />
+		</Transition>
+		<Transition ToState="Inputed">
+			<Xpath Value=".//FunctionDefinition/Declarator/DirectDeclarator[@Image='main']" 
+				Action="checkMainArgs"  Args = "java.util.List,softtest.fsm.c.FSMMachineInstance" />
+		</Transition>
+	</State>
+	<State Name="Inputed">
+		<Transition ToState="END">
+			<AlwaysTrue Action="checkTaintedSetEmpty" Args ="softtest.cfg.c.VexNode,softtest.fsm.c.FSMMachineInstance"/>
+		</Transition>
+		<Transition ToState="ERROR">
+			<AlwaysTrue Action="checkTaintedDataUsed" Args ="softtest.cfg.c.VexNode,softtest.fsm.c.FSMMachineInstance"/>
+		</Transition>
+	</State>
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">
+		</Transition>
+	</State>
+	<State Name="END" isFinalState="true">
+	</State>
+</TD-State-Machine>

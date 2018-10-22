@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OP-State-Machine Version="0.1" Language="C" Scope="File" Type="OP" isPathSensitive="false" isVariableRelated="false" 
+		Action ="createOPStateMachines" 
+		Class ="softtest.rules.keilc.fault.OPStateMachine" 
+		Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine">
+	<State Name="Start" isStartState="true">
+		<Transition ToState="ERROR">
+		</Transition>				
+	</State>		
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">			
+		</Transition>
+	</State>	
+	<State Name="END" isFinalState="true">
+	</State>
+</OP-State-Machine>

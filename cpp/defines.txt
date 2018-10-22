@@ -1,0 +1,127 @@
+/**zys:2010.6.24	
+	在实际测试中，对不能识别的关键字予以屏蔽替换；
+	在实际测试中，应该不断添加相关的宏，直至本文件稳定；
+	屏蔽格式如下:
+	#define __inline__
+ */
+#define __builtin_va_list char* 
+#define __signed__ signed 
+#define __signed signed
+#define __builtin_offsetof(s , m) ((size_t)(&(((s *)0)-> m)))
+#define _INTSIZEOF(n)   ( (sizeof(n) + sizeof(int) - 1) & ~(sizeof(int) - 1) )
+#define va_start(ap,v)  ( ap = (va_list)&v + _INTSIZEOF(v) )
+#define va_arg(ap,t)    ( *(t *)((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)) )
+#define va_end(ap)      ( ap = (va_list)0 )
+#define VOS_Assert_X(a)  if(!(a)) exit(0)
+#define cregister
+#define ioport
+#define __builtin_va_start(ap,v) ( ap = (va_list)&v + _INTSIZEOF(v) )
+#define __builtin_va_arg(ap,t) ( *(t *)((ap += _INTSIZEOF(t)) - _INTSIZEOF(t)) )
+#define __builtin_va_end(ap) ( ap = (va_list)0 )
+
+/*---------------------------------------------added by qfx---------------------------------------------------*/
+#define __STDC_IEC_599__ 1
+#define __STDC_IEC_599_COMPLEX__ 1
+#define __STDC_VERSION__ 199991L
+#define __STDC_ISO_10646__ 200104L 
+#define VERSION
+
+#ifdef _M_ALPHA
+typedef struct {
+	char *a0;
+	int offset;
+} va_list;
+#else
+	typedef char * va_list;
+#endif
+
+/*----------------------------------------------INT----------------------------------------------------------*/
+#define int8 int
+#define INT8 int
+#define int16 int
+#define INT16 int
+//#define int32 int
+//#define INT32 int
+//#define int64 int
+//#define INT64 int
+
+#define uint8  unsigned int
+#define UINT8  unsigned int
+#define uint16 unsigned int
+#define UINT16 unsigned int
+//#define uint32 unsigned int
+//#define UINT32 unsigned int
+//#define uint64 unsigned int
+//#define UINT64 unsigned int
+//
+#define int8_t  int
+#define int16_t int
+#define int32_t int
+#define int64_t int
+#define int128_t int
+#define uint8_t unsigned int
+#define uint16_t unsigned int
+#define uint32_t unsigned int
+#define uint64_t unsigned int
+#define uint128_t unsigned int
+#define size_t unsigned int
+/*------------------------------ARM单片机关键字------------------------------*/
+#define u8 unsigned char
+#define U8 unsigned char
+#define u16 unsigned short
+#define U16 unsigned short
+#define u32 unsigned long
+#define U32 unsigned long
+
+//#define uchar unsigned char
+//#define UCHAR unsigned char
+#define u_char unsigned char
+#define __u_short unsigned short
+#define __u_char unsigned char
+#define __u_int unsigned int
+#define __u_long unsigned long
+
+/*--------------------------------------------------------------------------------------------------------*/
+
+//#define idata
+//#define __idata
+#define pdata
+#define __pdata
+//#define code
+//#define __code
+//#define bit char
+//#define __bit bit
+#define reentrant
+#define __reentrant
+#define critical
+#define __critical
+#define naked
+#define __naked
+#define globaldef
+#define globalref
+#define globalvalue int
+#define noshare
+#define readonly
+#define variant_struct struct
+#define variant_union union
+
+
+//#define __quad_t int
+//#define __u_quad_t unsigned int
+//#define __fsid_t int
+//#define __loff_t int
+
+#define id_t unsigned long
+
+#define sigset_t int
+#define register
+#define CONST
+#define inline
+#define spixel_t int
+#define RESTRICT
+#define BOOL int
+// added by cmershen 2016.12.29
+#define __uid32_t int 
+#define __gid32_t int
+#define ASN1_BOOLEAN int
+#define boolean int

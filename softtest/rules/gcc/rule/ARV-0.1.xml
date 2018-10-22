@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ARV-State-Machine Version="0.1" Language="C" 
+        Type="ARV" 
+		isPathSensitive="false" 
+		isVariableRelated="false" 
+		Action ="createARVMachines" 
+		Class ="softtest.rules.gcc.rule.ARVStateMachine" 
+		Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine">
+	
+	<State Name="Start" isStartState="true">
+		<Transition ToState="ERROR">
+			<AlwaysTrue/>
+		</Transition>
+	</State>
+	
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">			
+		</Transition>
+	</State>
+	
+	<State Name="END" isFinalState="true">
+	</State>
+</ARV-State-Machine>

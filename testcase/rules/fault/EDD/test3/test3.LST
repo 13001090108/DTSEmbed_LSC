@@ -1,0 +1,26 @@
+C51 COMPILER V8.02   TEST3                                                                 04/22/2010 19:45:05 PAGE 1   
+
+
+C51 COMPILER V8.02, COMPILATION OF MODULE TEST3
+OBJECT MODULE PLACED IN .\testcase\rules\fault\EDD\test3\test3.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\c51.exe .\testcase\rules\fault\EDD\test3\test3.c PP(D:\Project\DTS\DTSEmbed\temp\te
+                    -st32.i)
+
+line level    source
+
+*** WARNING C500 IN LINE 1 OF .\TESTCASE\RULES\FAULT\EDD\TEST3\TEST3.C: LICENSE ERROR (R225: REGISTRATION FILE 'TOOLS.IN
+             -I' NOT FOUND)
+
+   1          int i;
+   2          int xdata j;
+   3          void f()
+   4          {
+   5   1      extern xdata int i;
+*** ERROR C231 IN LINE 5 OF .\TESTCASE\RULES\FAULT\EDD\TEST3\TEST3.C: 'i': redefinition
+   6   1      extern xdata char a;
+   7   1      extern int j;
+*** ERROR C231 IN LINE 7 OF .\TESTCASE\RULES\FAULT\EDD\TEST3\TEST3.C: 'j': redefinition
+   8   1      extern  idata int b;
+   9   1      }
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  2 ERROR(S)

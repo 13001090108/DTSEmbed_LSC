@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NPD_Summary>	
+	<Method name="malloc" libPos="stdlib.h;malloc.h" signature="void *malloc(unsigned int x);">
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="strlen" libPos="string.h" signature="int strlen(const char * str);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Return type = "Int" value = "[0,inf]"/>
+	</Method>
+    <Method name="strcat" libPos="string.h" signature="char *strcat(char *dest, const char *src);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="strcpy" libPos="string.h" signature="char *strcpy(char * s1, const char * s2);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="strchr" libPos="string.h" signature="char * strchr(const char * str, int c );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="strcmp" libPos="string.h" signature="int strcmp(const char *s1, const char *s2);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="read" libPos="io.h;unistd.h" signature="int read(int size, void * buffer, unsigned int num);">
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="strcspn" libPos="string.h" signature="typedef unsigned int size_t; 
+	    size_t strcspn( const char * str1, const char * str2 );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="memchr" libPos="string.h" signature="typedef unsigned int size_t;
+	    void *memchr(const void *str, int c, size_t n);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="memcmp" libPos="string.h" signature="typedef unsigned int size_t;
+		int memcmp(const void * ptr1, const void * ptr2, size_t num );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="memcpy" libPos="string.h" signature="typedef unsigned int size_t;
+	    void * memcpy( void * destination, const void * source, size_t num );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+		<Method name="memset" libPos="string.h" signature="typedef unsigned int size_t;
+		void *memset(void *str, int c, size_t n);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="perror" libPos="stdio.h" signature="void perror( const char *str );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="strxfrm" libPos="string.h" signature="typedef unsigned int size_t;
+		size_t strxfrm(char *str1, const char *str2, size_t num);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="strspn" libPos="string.h" signature="typedef unsigned int size_t;
+	    size_t strspn( const char * str1, const char * str2 );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="strncpy" libPos="string.h" signature="typedef unsigned int size_t;
+	    char *strncpy(char *dest, const char *str, size_t n);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="strncmp" libPos="string.h" signature="typedef unsigned int size_t;
+		int strncmp(const char * str1, const char * str2, size_t num );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="strncat" libPos="string.h" signature="typedef unsigned int size_t;
+	    char * strncat(char * destination, char * source, size_t num );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="memmove" libPos="string.h" signature="typedef unsigned int size_t;
+	    void * memmove( void * destination, const void * source, size_t num );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="strcoll" libPos="string.h" signature="int strcoll( const char *str1, const char *str2 );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="qsort" libPos="stdlib.h" signature="typedef unsigned int size_t;
+		void qsort( void *buf, size_t num, size_t size, int (*compare)(const void *, const void *) );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "4"/>
+	</Method>
+	<Method name="fopen" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    FILE *fopen( const char *fname, const char *mode );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="fclose" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    int fclose(FILE *stream);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="putc" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    int putc( int ch, FILE *stream );">
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="ungetc" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    int ungetc( int ch, FILE *stream );">
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="fputs" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    int fputs(const char *str, FILE *stream );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="tmpfile" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    FILE *tmpfile();">
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="rewind" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    void rewind( FILE *stream );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="setvbuf" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    typedef unsigned int size_t;
+	    int setvbuf( FILE *stream, char *buffer, int mode, size_t size );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="fread" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    typedef unsigned int size_t;
+	    size_t fread( void *buffer, size_t size, size_t num, FILE *stream );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "4"/>
+	</Method>
+	<Method name="ferror" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    int ferror(FILE *stream);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="fputc" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    int fputc(int ch, FILE *stream );">
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="fgetc" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    int fgetc( FILE *stream );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="fgets" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    char *fgets( char *str, int num, FILE *stream );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "3"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="clearerr" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    void clearerr(FILE *stream );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="printf" libPos="stdio.h" signature="int printf( const char *format, ... );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="fprintf" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    int fprintf( FILE *stream, const char *format, ... );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="mktime" libPos="time.h" signature="typedef long time_t;
+	    time_t mktime( struct tm *time );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method> 
+	<Method name="localtime" libPos="time.h" signature="typedef long time_t;
+	    struct tm *localtime( const time_t * timer);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<!---->
+	 <Method name="sprintf" libPos="stdio.h" signature="int sprintf( char *buffer, const char *format, ... );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="strtoul" libPos="stdlib.h" signature="unsigned long strtoul(const char *start, char **end, int base);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+		<Method name="strtok" libPos="string.h" signature="char *strtok( char *str1, const char *str2 );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+		<Method name="strstr" libPos="string.h" signature="char * strstr(char * str1, const char * str2 );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="strrchr" libPos="string.h" signature="char * strrchr( const char * str, int c);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="strpbrk" libPos="string.h" signature="char * strpbrk( char * str1, const char * str2 );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="puts" libPos="stdio.h" signature="int puts( char *str );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="remove" libPos="stdio.h" signature="int remove( const char * filename );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="sscanf" libPos="stdio.h" signature="int sscanf( const char *buffer, const char *format, ... );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="rename" libPos="stdio.h" signature="int rename( const char *oldfname, const char *newfname );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="modf" libPos="math.h" signature="double modf( double num, double *i );">
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+		<Method name="asctime" libPos="time.h" signature="char *asctime( const struct tm *ptr );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="atof" libPos="stdlib.h" signature="double atof( const char *str );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="atoi" libPos="stdlib.h" signature="int atoi( const char *str );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="atol" libPos="stdlib.h" signature="long atol( const char *str );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="vfprintf" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;typedef void* va_list;
+	    int vfprintf ( FILE * stream, const char * format, va_list arg );">
+		<Feature type="PRECOND_NPD" value="1"/>
+		<Feature type="PRECOND_NPD" value="2"/>
+	</Method>
+	<Method name="vsprintf" libPos="stdio.h" signature="int vsprintf (char * str, const char * format, ...);">
+		<Feature type="PRECOND_NPD" value="1"/>
+		<Feature type="PRECOND_NPD" value="2"/>
+	</Method>
+	<Method name="strtod" libPos="stdlib.h" signature="double strtod( const char *start, char **end );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="strtol" libPos="stdlib.h" signature="long strtol(const char *start, char **end, int base);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="fwrite" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;typedef unsigned int size_t;
+	    int fwrite( const void *buffer, size_t size, size_t count, FILE *stream );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "4"/>
+	</Method>
+	<Method name="getc" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    int getc( FILE *stream );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="getenv" libPos="stdlib.h" signature="char *getenv( const char *name );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="gets" libPos="stdio.h" signature="char *gets( char *str );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="gmtime" libPos="time.h" signature="typedef long time_t;
+	    struct tm *gmtime( const time_t *time );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="fseek" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    int fseek( FILE *stream, long offset, int origin );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="ftell" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    long ftell( FILE *stream );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="fscanf" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    int fscanf( FILE *stream, const char *format, ... );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="frexp" libPos="math.h" signature="double frexp( double num, int* exp );">
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="freopen" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    FILE *freopen( const char *fname, const char *mode, FILE *stream );">
+		<Feature type = "PRECOND_NPD" value = "3"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+	<Method name="fflush" libPos="stdio.h" signature="typedef struct _iobuf {} FILE;
+	    int fflush(FILE *stream);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="bsearch" libPos="stdlib.h" signature="typedef unsigned int size_t;
+	    void *bsearch( const void *key, const void *buf, size_t num, size_t size, int (*compare)(const void *, const void *) );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+		<Feature type = "PRECOND_NPD" value = "5"/>
+		<Return type = "Point" value = "NULL_OR_NOTNULL"/>
+	</Method>
+    <Method name="wctomb" libPos="stdlib.h" signature="typedef unsigned short wchar_t;
+        int wctomb(char *mbchar, wchar_t wchar);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+	<Method name="strftime" libPos="time.h" signature="typedef unsigned int size_t;
+	    size_t strftime(char *str, size_t maxsize, const char *fmt, struct tm *time);">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "3"/>
+		<Feature type = "PRECOND_NPD" value = "4"/>
+	</Method>
+	<Method name="wcstombs" libPos="stdlib.h" signature="typedef unsigned int size_t;typedef unsigned short wchar_t;
+	    size_t wcstombs( char *mbstr, const wchar_t *wcstr, size_t count );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+		<Feature type = "PRECOND_NPD" value = "2"/>
+	</Method>
+	<Method name="longjmp" libPos="setjmp.h" signature="void longjmp( int* envbuf, int status );">
+		<Feature type = "PRECOND_NPD" value = "1"/>
+	</Method>
+</NPD_Summary>

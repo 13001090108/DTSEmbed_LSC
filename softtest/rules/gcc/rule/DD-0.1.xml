@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DD-State-Machine Version="0.1" Language="C" Type="DD" isPathSensitive="false" 
+                   isVariableRelated="true" Action ="createDDStateMachines" 
+                   Class ="softtest.rules.gcc.rule.DDStateMachine" 
+                   Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine" 
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                   xsi:noNamespaceSchemaLocation="fsm.xsd">
+	<State Name="Start" isStartState="true">
+		<Transition ToState="ERROR">
+			<Xpath Value=".//Declaration/InitDeclaratorList/InitDeclarator/Declarator/DirectDeclarator[@Operators='[']" 
+			Action="checkArrayDecIsNull" 
+			Args ="java.util.List,softtest.fsm.c.FSMMachineInstance"/>
+		</Transition>
+	</State>
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">
+		</Transition>
+	</State>
+	<State Name="END" isFinalState="true">
+	</State>
+</DD-State-Machine>

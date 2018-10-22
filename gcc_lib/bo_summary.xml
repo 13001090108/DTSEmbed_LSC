@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BO_Summary>
+	
+	<!-- 缓冲区拷贝库函数 -->
+
+	<Method name="strcpy" libPos="string.h" signature="char *strcpy(char * s1, const char * s2);">
+		<Feature type = "BO_PRECON" subtype="BUFFERCOPY" bufIndex = "0" srcIndex="1" limitLen="-1" needNull="false"/>
+	</Method>
+	
+	<Method name="strcat" libPos="string.h" signature="char * strcat ( char * destination, const char * source );">
+		<Feature type = "BO_PRECON" subtype="BUFFERCOPY" bufIndex = "0" srcIndex="1" limitLen="-1" needNull="false"/>
+	</Method>
+
+	<Method name="strncat" libPos="string.h" signature="typedef unsigned int size_t;char * strncat(char *dest,const char *src,size_t n);">
+		<Feature type = "BO_PRECON" subtype="BUFFERCOPY" bufIndex = "0" srcIndex="1" limitLen="2" needNull="true"/>
+	</Method>
+	
+	<Method name="bcopy" libPos="string.h" signature="void bcopy(const void *src, void *dest, int n);">
+		<Feature type = "BO_PRECON" subtype="BUFFERCOPY" bufIndex = "1" srcIndex="0" limitLen="2" needNull="true"/>
+	</Method>
+	
+	<Method name="read" libPos="unistd.h" signature="typedef unsigned int size_t;size_t read(int fd,void * buf ,size_t count);">
+		<Feature type = "BO_PRECON" subtype="BUFFERCOPY" bufIndex = "1" srcIndex="-1" limitLen="2" needNull="false"/>
+	</Method>
+
+	<Method name="memccpy" libPos="string.h" signature="typedef unsigned int size_t;void * memccpy(void *dest,const void *src,int c,size_t n);">
+		<Feature type = "BO_PRECON" subtype="BUFFERCOPY" bufIndex = "0" srcIndex="1" limitLen="3" needNull="true"/>
+	</Method>	
+
+	<Method name="memmove" libPos="string.h" signature="typedef unsigned int size_t;void * memmove(void *dest,const void *src,size_t n);">
+		<Feature type = "BO_PRECON" subtype="BUFFERCOPY" bufIndex = "0" srcIndex="1" limitLen="2" needNull="true"/>
+	</Method>		
+	
+	<Method name="memset" libPos="string.h" signature="typedef unsigned int size_t;void * memset (void *s ,int c, size_t n);;">
+		<Feature type = "BO_PRECON" subtype="BUFFERCOPY" bufIndex = "0" srcIndex="2" limitLen="-1" needNull="false"/>
+	</Method>
+	
+	<Method name="strncpy" libPos="string.h" signature="typedef unsigned int size_t;char * strncpy(char *dest,const char *src,size_t n);">
+		<Feature type = "BO_PRECON" subtype="BUFFERCOPY" bufIndex = "0" srcIndex="1" limitLen="2" needNull="true"/>
+	</Method>
+
+	<Method name="memcpy" libPos="string.h" signature="typedef unsigned int size_t;void * memcpy (void * dest ,const void *src, size_t n);">
+		<Feature type = "BO_PRECON" subtype="BUFFERCOPY" bufIndex = "0" srcIndex="1" limitLen="2" needNull="true"/>
+	</Method>
+	
+	<Method name="gcvt" libPos="stdlib.h" signature="typedef unsigned int size_t;char *gcvt(double number,size_t ndigits,char *buf);">
+		<Feature type = "BO_PRECON" subtype="BUFFERCOPY" bufIndex = "2" srcIndex="0" limitLen="1" needNull="true"/>
+	</Method>
+
+	<Method name="fgets" libPos="stdio.h" signature="typedef struct _iobuf
+													{
+													char*	_ptr;
+													int	_cnt;
+													char*	_base;
+													int	_flag;
+													int	_file;
+													int	_charbuf;
+													int	_bufsiz;
+													char*	_tmpfname;
+													} FILE;
+													char * fgets(char * s,int size,FILE* stream);">
+		<Feature type = "BO_PRECON" subtype="BUFFERCOPY" bufIndex = "0" srcIndex="-1" limitLen="1" needNull="false"/>
+	</Method>
+	
+		<Method name="fread" libPos="stdio.h" signature="typedef struct _iobuf
+													{
+														char*	_ptr;
+														int	_cnt;
+														char*	_base;
+														int	_flag;
+														int	_file;
+														int	_charbuf;
+														int	_bufsiz;
+														char*	_tmpfname;
+													} FILE;
+													typedef unsigned int size_t;
+													size_t fread(void * ptr,size_t size,size_t nmemb,FILE* stream);">
+		<Feature type = "BO_PRECON" subtype="BUFFERCOPY" bufIndex = "0" srcIndex="-1" limitLen="2" needNull="false"/>
+	</Method>	
+
+</BO_Summary>

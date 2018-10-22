@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MLF_PRE-State-Machine Version="0.1" Language="C" 
+	Type="MLF_PRE" 
+	isPathSensitive="true" 
+	isVariableRelated="true" 
+	Action ="createMLFStateMachines" 
+	Class ="softtest.rules.gcc.fault.MLFPreGLobleVarStateMachine" 
+	Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine">
+	
+	<State Name="Start" isStartState="true">
+		<Transition ToState="END">
+			<Scope Type="out"/>
+		</Transition>
+		<Transition ToState="ERROR">
+		    <Xpath Value=".//UnaryExpression/PostfixExpression/PrimaryExpression[@Method='true']" Action="checkAllocError" Args="java.util.List,softtest.fsm.c.FSMMachineInstance" >
+		    </Xpath>
+		</Transition>		
+	</State>	
+
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">
+		</Transition>
+	</State>
+	
+	<State Name="END" isFinalState="true">
+	</State>
+</MLF_PRE-State-Machine>

@@ -1,0 +1,188 @@
+options {
+  BUILD_PARSER=true;
+  JAVA_UNICODE_ESCAPE = true;
+  CACHE_TOKENS = true;
+  STATIC = false;                       
+  OUTPUT_DIRECTORY = "symbolic";
+}
+
+PARSER_BEGIN(SymbolicParser)
+
+package softtest.domain.c.symbolic.parser;
+import softtest.domain.c.symbolic.*;
+import java.util.*;
+import java.io.*;
+
+public class SymbolicParser {
+	static public Expression parse(String str){
+		SymbolicParser parser = null;
+		Expression ret = null;
+		try {
+			parser = new SymbolicParser(new StringReader(str));
+			ret = parser.Expr();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
+}
+
+PARSER_END(SymbolicParser)
+
+SKIP:
+{
+	" "
+	| "\t"
+	| "\f"
+}
+
+TOKEN:
+{
+	< ID: ["a"-"h","j"-"z","A"-"Z","_"] ( ["a"-"z","A"-"Z","_","0"-"9"] )* | ["i"] ["a"-"z","A"-"Z","_"] ( ["a"-"z","A"-"Z","_","0"-"9"] )* >
+	| < NUM: (["0"-"9"])+ | ["."] (["0"-"9"])+ | (["0"-"9"])+ ["."] | (["0"-"9"])+ ["."] (["0"-"9"])+ >
+}
+
+
+Expression Expr() :
+{Token t = null; Term term=null;Expression expr=null;}
+{
+	[(t="+" | t="-")] term=Term()
+	{	
+		if(t!=null&&t.image.equals("-")){
+			term.setOperator("-");
+		}
+		expr=new Expression(term,false);
+	}
+	
+	
+	( (t="+" | t="-") term=Term() 
+	  {	
+	  	if(t.image.equals("-")){
+			term.setOperator("-");
+		}
+		expr.appendTerm(term);
+	  }
+	)*
+	{
+		return expr;
+	}
+}
+
+Term Term() :
+{Token t = null;Power power=null;Term term=null;}
+{
+	[(t="*" | t="/")] power=Power() 
+	{	
+		if(t!=null&&t.image.equals("/")){
+			power.setOperator("/");
+		}
+		term=new Term(power,false);
+	}
+	
+	
+	( (t="*" | t="/") power=Power() 
+	  {	
+	  	if(t.image.equals("/")){
+			power.setOperator("/");
+		}
+		term.appendPower(power);
+	  }	
+	)*
+	{
+	
+		return term;
+	}
+}
+
+Power Power() :
+{Power power=null;Factor factor=null;}
+{
+	["^"] factor=Factor()
+	{	
+		power=new Power(factor,false);
+	}
+	
+	("^" factor=Factor()
+	  {
+	  	power.appendFactor(factor);
+	  }
+	)*
+	{
+		
+		return power;
+	}
+}
+
+Factor Factor() :
+{Factor factor=null;Expression expr=null;List<Expression> paramlist=null;String name=null;}
+{
+	"(" expr=Expr() ")" 
+	{
+		factor=new NestedExprFactor(expr);
+		return factor;
+	}
+	
+	| name=Identifier() [ "[" paramlist=ExprList() "]" ] 
+	{
+		if(paramlist==null){
+			factor=new SymbolFactor(name);
+		}else{
+			factor=new FunctionFactor(name,paramlist);
+		}
+		return factor;
+	}
+	
+	| name=Number()
+	{
+		try{
+			long l=Long.parseLong(name);
+			return new IntegerFactor(l);
+		}catch(NumberFormatException e1){
+			try{
+				double d=Double.parseDouble(name);
+				return new DoubleFactor(d);
+			}catch(NumberFormatException e2){
+				throw new RuntimeException("Number format error");
+			}
+		}
+	}
+}
+
+String Identifier() :
+{Token t = null;}
+{
+	t = <ID>
+	{
+		return t.image;
+	}
+}
+
+String Number() :
+{Token t = null;}
+{
+	t = <NUM>
+	{
+		return t.image;
+	}
+
+}
+
+List<Expression> ExprList() :
+{List<Expression> list=null;Expression expr=null;}
+{
+	[expr=Expr()
+	{
+		list=new ArrayList<Expression>();
+		list.add(expr);
+	}
+	
+	("," expr=Expr()
+	{
+		list.add(expr);
+	}
+	
+	)*]
+	{
+		return list;
+	}
+}

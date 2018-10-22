@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EMPTY-State-Machine Version="0.1" Language="C" 
+        Type="StaticTest" 
+		isPathSensitive="false" 
+		isVariableRelated="true" 
+		Action ="createStaticTestStateMachines" 
+		Class ="softtest.rules.gcc.question.StaticTestStateMachine" 
+		Args ="softtest.ast.c.SimpleNode,softtest.fsm.c.FSMMachine">
+	
+	<State Name="Start" isStartState="true">
+		<Transition ToState="ERROR">
+		</Transition>
+	</State>
+	
+	<State Name="ERROR" isErrorState="true">
+		<Transition ToState="END">			
+		</Transition>
+	</State>
+	
+	<State Name="END" isFinalState="true">
+	</State>
+</EMPTY-State-Machine>
